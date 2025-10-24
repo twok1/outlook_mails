@@ -1,3 +1,4 @@
+from copy import deepcopy
 import win32com.client
 import datetime, os, json
 from dateutil.parser import *
@@ -43,16 +44,17 @@ def message_parsing(msg, messages):
             destination = line[3:] 
         if line.startswith('С целью - '):
             target = line[10:]
-    put_in = False
     msg_info = order_code, start_date, end_date, order_date, target, destination
-    for mess in messages:
+    i = 0
+    need_append = True
+    while i < len(messages):
+        mess = messages[i]
         if mess['order']['code'] == order_code:
-            mess = serialize_mess(mess, *msg_info)
-            put_in = True
-    if not put_in:
-        mess = serialize_mess(mess, *msg_info)
-    print(messages)
-
+            need_append = False
+            break
+        i += 1
+    if need_append:
+        messages.append(serialize_mess(deepcopy(mess), *msg_info))
 
     print(f'с {start_date} до {end_date} по {order_code} от {order_date}\nв {destination}\nцель: {target}')
     return messages
@@ -66,6 +68,7 @@ def message_parsing(msg, messages):
 
 def analing_messages(messages):
     '''проверка на перекрытие дат'''
+    messages.pop(0)
     return messages
 
 def read_mails(messages):
@@ -74,14 +77,22 @@ def read_mails(messages):
     inbox = outlook.GetDefaultFolder(6).Items  # 6- папка Входящие Outlook
     msg = inbox.GetLast() # последнее письмо в ящике
     while msg :
-        subject = str(msg.Subject) # тема письма
-        msg_date = datetime.datetime.strptime(str(msg.SentOn)[0:19], '%Y-%m-%d %H:%M:%S')
+        if msg.Class == 52:
+            msg = inbox.GetPrevious()
+            continue
+        # subject = str(msg.Subject) # тема письма
+        # msg_date = datetime.datetime.strptime(str(msg.SentOn)[0:19], '%Y-%m-%d %H:%M:%S')
         # to_list = str(msg.To).split(';') # список получателей
-        sender = msg.SenderName # отправитель
-        text = str(msg.Body) # текст письма
         # html_text = str(msg.HTMLBody) # html код письма
+        
+        sender = msg.SenderName # отправитель
+        
         if sender == 'Уведомления о кадровых мероприятиях':
-            messages = message_parsing(text, messages)
+            try:
+                text = str(msg.Body) # текст письма
+                messages = message_parsing(text, messages)
+            except:
+                pass
         msg = inbox.GetPrevious() # переход к следующему письму
     return messages
 
@@ -147,7 +158,7 @@ def make_tasks(need_tasks):
                 mess.Duration = 90
                 mess.AllDayEvent = True
                 mess.Subject = f'[командировка] {task["order"]["code"]}'
-                mess.Body = f"{task['target']}\n {task['destination']}"
+                mess.Body = f"{task['target']}\n {task['destination']} \n {task['dates']['start']} - {task['dates']['end']}"
                 mess.Save()
 
 
