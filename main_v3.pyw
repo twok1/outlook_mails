@@ -2,17 +2,28 @@ import win32com.client
 import datetime, os, json
 from dateutil.parser import *
 import schedule, time
+import configparser
+from pathlib import Path
 
 
-FUCKING_OUT =  range(5, 25)
-START_NOTIFICATION = [-1]
-END_NOTIFICATION = [-3]
-WORKING_RANGE = (0, 15, 30, 45)
+SCRIPT_PATH = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config_mails.ini'))
+
+config = configparser.ConfigParser()
+config.read(SCRIPT_PATH, encoding='utf-8')
+FUCKING_OUT =  (int(config.get('mails', 'END_LOCK')), int(config.get('mails', 'START_LOCK')))
+START_NOTIFICATION = list([i for i in map(int, config.get('mails', 'START_NOTIFICATION').split(', '))])
+END_NOTIFICATION = list([i for i in map(int, config.get('mails', 'END_NOTIFICATION').split(', '))])
+WORKING_RANGE = tuple([i for i in map(int, config.get('mails', 'WORKING_RANGE').split(', '))])
+# FUCKING_OUT = (5, 25)
+# START_NOTIFICATION = [-7, -3, -1]
+# END_NOTIFICATION = [-7, -3, -1]
+# WORKING_RANGE = (0, 15, 30, 45)
 
 # WORKING_RANGE = range(60)
 
 
 class FakeOutlook:
+    # фэйковый аутлук. использовал для отладки
     def __init__(self, text: str) -> None:
         if len(text.splitlines()) > 0:
             self.SenderName = text.splitlines()[0]
@@ -48,8 +59,8 @@ class TaskDates:
 class Notifications:
     # класс с временами напоминаний
     def __init__(self) -> None:
-        self.start = START_NOTIFICATION
-        self.end = END_NOTIFICATION
+        self.start = START_NOTIFICATION.copy()
+        self.end = END_NOTIFICATION.copy()
 
 
 class Tasking:
@@ -60,7 +71,7 @@ class Tasking:
                 self.order = Order(date_to_datetime(line[67:77]), line[78:-1])
                 self.dates = TaskDates(date_to_datetime(line[31:41]), date_to_datetime(line[45:55]))
             elif line.startswith('В: '):
-                self.destination = line[3:] 
+                self.destination = line[3:]
             elif line.startswith('С целью - '):
                 self.target = line[10:]
                 self.notifications = Notifications()
@@ -72,35 +83,21 @@ class Tasking:
         k = 0
         while k < len(self.notifications.end):
             d = self.notifications.end[k]
-            while (self.dates.end + datetime.timedelta(d)).day not in FUCKING_OUT:
+            while (self.dates.end + datetime.timedelta(d)).day <= FUCKING_OUT[0] \
+                    or (self.dates.end + datetime.timedelta(d)).day >= FUCKING_OUT[1]:
                 self.notifications.end[k] -= 1
                 d = self.notifications.end[k]
             k += 1
 
         s = [self.dates.start + datetime.timedelta(i) for i in self.notifications.start]
         e = [self.dates.end + datetime.timedelta(i) for i in self.notifications.end]
-        return s + e
+        return list(set(s + e))
     
 def date_to_datetime(d: str) -> datetime.datetime:
     return datetime.datetime.strptime(d, '%d.%m.%Y')
 
 def datetime_to_date(d: datetime.datetime) -> str:
     return datetime.datetime.strftime(d, '%d.%m.%Y')
-
-def fake_read_mails() -> list:
-    mails: list[FakeOutlook] = []
-
-    for file in os.listdir('./mails/'):
-        with open(f'./mails/{file}', 'r', encoding='utf-8') as f:
-             mails.append(FakeOutlook(f.read()))
-    i = 0
-    while i < len(mails):
-        msg = mails[i]
-        if msg.SenderName != 'Уведомления о кадровых мероприятиях':
-            mails.pop(i)
-        else:
-            i += 1
-    return mails
 
 def norm_read_mails() -> list:
     '''читаем почту'''
@@ -156,7 +153,7 @@ def analize_tasks(mail_tasks: list[Tasking], now_tasks):
     for mt in mail_tasks:
         nots = [m for m in mt.ret_notifications()]
         for nt in now_tasks:
-            if nt.Subject.startswith('[командировка напоминание]'):
+            if nt.Subject.startswith(f'[командировка напоминание]'):
                 k = datetime.datetime.strptime(str(parse(str(nt.Start)).date()), '%Y-%m-%d')
                 if k in nots:
                     nots.remove(k)
@@ -168,10 +165,11 @@ def analize_tasks(mail_tasks: list[Tasking], now_tasks):
 
 
 def make_tasks(need_tasks: list[Tasking]):
-    Outlook = win32com.client.Dispatch("Outlook.Application")
+    outlook = win32com.client.Dispatch("Outlook.Application")
     for task in need_tasks:
         for m in task.ret_notifications():
-            mess = Outlook.CreateItem(1)
+            # if datetime.timedelta(hours=3) + m >= datetime.datetime.now() - datetime.timedelta(days=1):
+            mess = outlook.CreateItem(1)
             mess.Start = datetime.timedelta(hours=3) + m
             mess.ReminderMinutesBeforeStart = 15
             mess.Duration = 90
@@ -184,7 +182,6 @@ def make_tasks(need_tasks: list[Tasking]):
 def main():
     # считываем письма с аутлука
     print('Обновление Outlook')
-    # mails = fake_read_mails()
     mails = norm_read_mails()
     # преобразовываем их в элементы заданий и обрабатываем 
     mail_tasks = form_tasks(mails)
