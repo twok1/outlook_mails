@@ -105,10 +105,11 @@ def norm_read_mails() -> list:
     outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
     inbox = outlook.GetDefaultFolder(6).Items  # 6- папка Входящие Outlook
     for msg in inbox:
-        subject = str(msg.Subject) # тема письма
-        sender = msg.SenderName # отправитель
-        if sender == 'Уведомления о кадровых мероприятиях' and subject == 'Информирование о направлении в командировку':
-            messages.append(msg)
+        if msg.Class != 52:
+            subject = str(msg.Subject) # тема письма
+            sender = msg.SenderName # отправитель
+            if sender == 'Уведомления о кадровых мероприятиях' and subject == 'Информирование о направлении в командировку':
+                messages.append(msg)
     return messages
 
 def form_tasks(mails) -> list[Tasking]:
@@ -202,8 +203,8 @@ def jobs():
 if __name__ == '__main__':
     # main()
     print('Работаем')
-    # for i in range(1, 60):
-    for i in WORKING_RANGE:
+    for i in range(1, 60):
+    # for i in WORKING_RANGE:
         # t = f':{i:02}'
         schedule.every().hour.at(f':{i:02}').do(main)
     
