@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class OutlookFilter:
+class OutlookFilter(ABC):
     @abstractmethod
     def apply(self):
         pass
