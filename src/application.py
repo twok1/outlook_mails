@@ -6,4 +6,5 @@ class Application:
         self.mail_reader = EmailReader()
     
     def run(self):
+        messages = self.mail_reader.run()
         pass
