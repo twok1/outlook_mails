@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 class LetterType(Enum):
     NEW = 'new'
@@ -29,7 +30,7 @@ class CommandTrip:
 
 @dataclass
 class Reminder:
-    reminder_id: str
     reminder_date: datetime
     subject: str
     text: str
+    reminder_id: Optional[str] = None
