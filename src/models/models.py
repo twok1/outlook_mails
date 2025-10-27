@@ -1,5 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+
+class LetterType(Enum):
+    NEW = 'new'
+    UPDATE = 'update'
+    CANCELATION = 'cancelation'
 
 @dataclass
 class EmailData:
@@ -19,6 +25,7 @@ class CommandTrip:
     order_number: str
     location: str
     purpose: str
+    letter_type: LetterType
 
 @dataclass
 class Reminder:
