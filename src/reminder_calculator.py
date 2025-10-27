@@ -23,21 +23,21 @@ class ReminderCalculator:
     END_NOTIFICATION = list(
         [int(i) for i in config.get(CONFIG_BLOCK, 'END_NOTIFICATION').split(', ')]
     )
-    WORKING_RANGE = tuple(
-        [int(i) for i in config.get(CONFIG_BLOCK, 'WORKING_RANGE').split(', ')]
-    )
     
     def run(self, messages: List[CommandTrip]) -> List[Reminder]:
         reminders: List[Reminder] = []
         for msg in messages:
+            was_dates = set()
             for date in self._dates_for_remind(msg):
-                reminders.append(
-                    Reminder(
-                        date,
-                        msg.get_subject(),
-                        msg.get_text(),
+                if date not in was_dates:
+                    reminders.append(
+                        Reminder(
+                            date,
+                            msg.get_subject(),
+                            msg.get_text(),
+                        )
                     )
-                )
+                    was_dates.add(date)
         return reminders
     
 
@@ -51,7 +51,7 @@ class ReminderCalculator:
             for reminder_day in reminder_days:
                 reminder_date = date + timedelta(reminder_day)
                 while reminder_date.day not in range(*self.WORKING_PERIOD)\
-                        and reminder_date.weekday in (6, 7):
+                        or reminder_date.weekday() >= 5:
                     reminder_date -= timedelta(days=1)
                 result.append(reminder_date)
         return result

@@ -38,9 +38,9 @@ class CommandTrip:
             f'- {self._get_date(self.end_date)} в {self.location}'
     
     def get_text(self) -> str:
-        return f'{self.purpose}\n{self.location}\n{self._get_date(self.start_date)}'\
-                f'- {self._get_date(self.end_date)} / {self.order_number}'\
-                f'от {self._get_date(self.order_date)}'
+        return f'{self.purpose}\n{self.location}\n'\
+                f'{self._get_date(self.start_date)} - {self._get_date(self.end_date)}\n'\
+                f'/ {self.order_number} от {self._get_date(self.order_date)}'
 
 @dataclass
 class Reminder:
