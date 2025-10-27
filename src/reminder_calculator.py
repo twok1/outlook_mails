@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List
 
 from src.models import Reminder
-from src.models.models import CommandTrip
+from src.models.dataclasses import CommandTrip
 
 class ReminderCalculator:
     SCRIPT_PATH = Path(__file__).parent.parent / 'config_mails.ini'

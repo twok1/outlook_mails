@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from typing import List, Optional, Tuple
 from src.models import EmailData, CommandTrip
-from src.models.models import LetterType
+from src.models.dataclasses import LetterType
 
 class EmailParser:
     DATES_LINE_PHRASE = 'Вы направлены в командировку с '

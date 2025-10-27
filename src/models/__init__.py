@@ -1,4 +1,4 @@
-from .models import EmailData, CommandTrip, Reminder
+from .dataclasses import EmailData, CommandTrip, Reminder
 
 __all__ = [
     'EmailData',
