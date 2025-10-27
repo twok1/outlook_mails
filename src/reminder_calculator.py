@@ -14,8 +14,8 @@ class ReminderCalculator:
     config = configparser.ConfigParser()
     config.read(SCRIPT_PATH, encoding='utf-8')
     WORKING_PERIOD =  (
-        int(config.get(CONFIG_BLOCK, 'START_LOCK')), 
-        int(config.get(CONFIG_BLOCK, 'END_LOCK'))
+        int(config.get(CONFIG_BLOCK, 'END_LOCK')), 
+        int(config.get(CONFIG_BLOCK, 'START_LOCK'))
     )
     START_NOTIFICATION = list(
         [int(i) for i in config.get(CONFIG_BLOCK, 'START_NOTIFICATION').split(', ')]
