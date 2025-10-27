@@ -15,5 +15,6 @@ class Application:
         messages = self.mail_reader.run()
         parsed_messages = self.mail_parser.run(messages)
         processed_messages = self.command_trip_processor.run(parsed_messages)
-        self.remind_calculator.run(processed_messages)
-        
+        reminds = self.remind_calculator.run(processed_messages)
+        for remind in reminds:
+            print(remind)

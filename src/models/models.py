@@ -3,6 +3,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+FORMAT_DATE = '%d.%m.%Y'
+
 class LetterType(Enum):
     NEW = 'new'
     UPDATE = 'update'
@@ -27,6 +29,18 @@ class CommandTrip:
     location: str
     purpose: str
     letter_type: LetterType
+    
+    def _get_date(self, date: datetime):
+        return datetime.strftime(date, FORMAT_DATE)
+    
+    def get_subject(self) -> str:
+        return f'[командировка] {self._get_date(self.start_date)}'\
+            f'- {self._get_date(self.end_date)} в {self.location}'
+    
+    def get_text(self) -> str:
+        return f'{self.purpose}\n{self.location}\n{self._get_date(self.start_date)}'\
+                f'- {self._get_date(self.end_date)} / {self.order_number}'\
+                f'от {self._get_date(self.order_date)}'
 
 @dataclass
 class Reminder:
