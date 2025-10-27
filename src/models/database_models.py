@@ -3,14 +3,14 @@ from sqlalchemy import Column, String, Integer, ForeignKey, DateTime
 
 Base = declarative_base()
 
-class CommandTrip(Base):
+class CommandTripDB(Base):
     __tablename__ = 'command_trips'
     
     id = Column(Integer, primary_key=True)
     message_id = Column(String, unique=True)
     create_date = Column(DateTime)
     
-class Reminder(Base):
+class ReminderDB(Base):
     __tablename__ = 'reminders'
     
     id = Column(Integer, primary_key=True)
