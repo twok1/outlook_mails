@@ -34,8 +34,8 @@ class CommandTrip:
         return datetime.strftime(date, FORMAT_DATE)
     
     def get_subject(self) -> str:
-        return f'[командировка] {self._get_date(self.start_date)}'\
-            f'- {self._get_date(self.end_date)} в {self.location}'
+        return f'[командировка] {self.order_number} {self._get_date(self.order_date)} '\
+            f'{self._get_date(self.start_date)} - {self._get_date(self.end_date)}'
     
     def get_text(self) -> str:
         return f'{self.purpose}\n{self.location}\n'\
