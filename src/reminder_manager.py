@@ -48,7 +48,7 @@ class ReminderManager:
             mess.Body = remind.text
             mess.Save()
             
-    def _analize_reminds(self, exists_tasks: List[win32com.client.CDispatch], reminds: List[Reminder]) -> List[Reminder]:
+    def _analize_to_add_reminds(self, exists_tasks: List[win32com.client.CDispatch], reminds: List[Reminder]) -> List[Reminder]:
         result: List[Reminder] = []
         for remind in reminds:
             need_add = True
@@ -63,8 +63,29 @@ class ReminderManager:
                 result.append(remind)
         return result
     
+    def _analize_to_remove_reminds(self, exists_tasks: List[win32com.client.CDispatch], reminds: List[Reminder]) -> List[win32com.client.CDispatch]:
+        result: List[win32com.client.CDispatch] = []
+        for task in exists_tasks:
+            need_remove = True
+            for remind in reminds:
+                if all((
+                    remind.subject == task.Subject,
+                    remind.reminder_date.date() == task.Start.date()
+                )):
+                    need_remove = False
+                    break
+            if need_remove:
+                result.append(task)
+        return result
+    
+    def _remove_reminds(self, remove_tasks: List[win32com.client.CDispatch]):
+        for task in remove_tasks:
+            task.Delete()
+            
+    
     def run(self, reminds: List[Reminder]):
         exists_tasks = self._get_all_reminds()
-        need_reminds = self._analize_reminds(exists_tasks, reminds)
+        need_reminds = self._analize_to_add_reminds(exists_tasks, reminds)
         self._make_reminds(need_reminds)
-        
+        remove_reminds = self._analize_to_remove_reminds(exists_tasks, reminds)
+        self._remove_reminds(remove_reminds)
