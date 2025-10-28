@@ -1,3 +1,4 @@
+from typing import List
 import win32com.client
 import datetime
 
@@ -25,7 +26,7 @@ class EmailReader:
             messages = [msg for msg in messages if filter.apply(msg)]
         return self._process_to_emaildata(messages=messages)
     
-    def _process_to_emaildata(self, messages: list) -> list:
+    def _process_to_emaildata(self, messages: list) -> List[EmailData]:
         new_messages = []
         for msg in messages:
             new_messages.append(
