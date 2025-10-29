@@ -66,3 +66,7 @@ class TestEmailParser:
     def test_parse_order_number(self):
         assert(self.parser._parse_order_number('приказ № 3.') == '3')
         assert(self.parser._parse_order_number('приказ') is None)
+        
+    def test_parse_purpose(self, sample_body_new):
+        purpose = self.parser._parse_purpose(sample_body_new)
+        assert purpose == self.TEST_PURPOSE
