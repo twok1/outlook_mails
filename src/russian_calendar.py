@@ -10,9 +10,9 @@ from src.models.dataclasses import CommandTrip
 
 class RussianCalendar:
     CALENDAR_URLS = (
-        'https://github.com/iposho/holidays-calendar-ru/blob/main/src/data/holidays.json',
-        'https://github.com/iposho/holidays-calendar-ru/blob/main/src/data/shortDays.json',
-        'https://github.com/iposho/holidays-calendar-ru/blob/main/src/data/workingHolidays.json',
+        'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/holidays.json',
+        'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/shortDays.json',
+        'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/workingHolidays.json',
     )
     
     SCRIPT_PATH = Path(__file__).parent.parent / 'config_mails.ini'
