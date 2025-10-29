@@ -1,7 +1,6 @@
 import configparser
 from pathlib import Path
 from typing import List
-from workalendar.europe import Russia
 from datetime import datetime, timedelta
 
 from src.models.dataclasses import CommandTrip
@@ -28,7 +27,12 @@ class RussianCalendar:
     )
     
     def __init__(self) -> None:
-        self.calendar = Russia()
+        self.cache_dir = Path('data')
+        self.cache_dir.mkdir(exist_ok=True)
+        self.calendar = self._load_calendar()
+        
+    def _load_calendar(self):
+        pass
         
     def dates_for_remind(self, msg: CommandTrip) -> List[datetime]:
         result = []
