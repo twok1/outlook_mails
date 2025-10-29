@@ -1,31 +1,15 @@
 from datetime import timedelta
 from pathlib import Path
 from typing import List, Optional
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
 import win32com.client
 
 from src.models import Reminder
-from src.models import CommandTripDB, ReminderDB, Base
 
 class ReminderManager:
     def __init__(self, db_path: Optional[Path] = None, folder: int=9) -> None:
-        if db_path is None:
-            db_path = Path(__file__).parent.parent.parent / 'data' / 'reminders.db'
-            
-        db_path.parent.mkdir(exist_ok=True)
-        
-        self.engine = create_engine(f'sqlite:///{db_path}')
-        Base.metadata.create_all(self.engine)
-        self.Session = sessionmaker(bind=self.engine)
-        
         self.folder = folder
         self.outlook_tasks = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
         self.create_tasks = win32com.client.Dispatch("Outlook.Application")
-        
-        
-    def _get_session(self) -> sessionmaker[Session]:
-        return self.Session
     
     def _get_all_reminds(self):
         appointments = self.outlook_tasks.GetDefaultFolder(self.folder).Items
