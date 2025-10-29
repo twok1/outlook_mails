@@ -20,7 +20,7 @@ class EmailParser:
         
     def parse(self, msg: EmailData) -> Optional[CommandTrip]:
         
-        start_date, end_date, order_date, order_number, location, purpose, letter_type = self._parse_and_check_for_errors(msg)
+        start_date, end_date, order_date, letter_type, order_number, location, purpose = self._parse_and_check_for_errors(msg)
         
         return CommandTrip(
             msg,
@@ -33,7 +33,7 @@ class EmailParser:
             letter_type
         )
     
-    def _parse_and_check_for_errors(self, msg: EmailData) -> Tuple[datetime, datetime, datetime, str, str, str, LetterType]:
+    def _parse_and_check_for_errors(self, msg: EmailData) -> Tuple[datetime, datetime, datetime, LetterType, str, str, str]:
         souce_line, start_date, end_date, order_date, letter_type = self._parse_dates(msg.body)
         order_number = self._parse_order_number(souce_line)
         location = self._parse_location(msg.body)
@@ -48,7 +48,7 @@ class EmailParser:
         ):
             if not val:
                 raise ValueError(f'Ошибка парсинга {msg.body}, не найден {descr}')
-        return start_date, end_date, order_date, order_number, location, purpose, letter_type
+        return start_date, end_date, order_date, letter_type, order_number, location, purpose
     
     def _parse_dates(self, body: str) -> Optional[Tuple[str, datetime, datetime, datetime, LetterType]]:
         letter_type = LetterType.NEW
