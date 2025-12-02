@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Optional
 import win32com.client
 
-from src.models import Reminder
+from .models import Reminder
 
 class ReminderManager:
     def __init__(self, db_path: Optional[Path] = None, folder: int=9) -> None:

@@ -5,7 +5,7 @@ from typing import List
 from datetime import datetime, timedelta
 import requests
 
-from src.models.dataclasses import CommandTrip
+from .models.dataclasses import CommandTrip
 
 
 class RussianCalendar:
@@ -20,7 +20,7 @@ class RussianCalendar:
     CONFIG_BLOCK = 'mails'
 
     config = configparser.ConfigParser()
-    config.read(SCRIPT_PATH, encoding='utf-8')
+    config.read('./config_mails.ini', encoding='utf-8')
     
     WORKING_PERIOD =  (
         int(config.get(CONFIG_BLOCK, 'END_LOCK')), 

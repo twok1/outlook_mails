@@ -1,9 +1,8 @@
 from typing import List
 import win32com.client
-import datetime
 
-from src.models import EmailData
-from src.filters import ClassFilter, SubjectFilter, SenderEmailFilter
+from .models import EmailData
+from .filters import ClassFilter, SubjectFilter, SenderEmailFilter
 
 class EmailReader:
     FILTERS = (

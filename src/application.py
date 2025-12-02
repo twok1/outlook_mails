@@ -1,8 +1,8 @@
-from src.command_trip_processor import CommandTripProcessor
-from src.email_parser import EmailParser
-from src.email_reader import EmailReader
-from src.reminder_calculator import ReminderCalculator
-from src.reminder_manager import ReminderManager
+from .command_trip_processor import CommandTripProcessor
+from .email_parser import EmailParser
+from .email_reader import EmailReader
+from .reminder_calculator import ReminderCalculator
+from .reminder_manager import ReminderManager
 
 
 class Application:

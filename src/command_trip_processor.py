@@ -1,6 +1,6 @@
 from typing import List
 
-from src.models.dataclasses import CommandTrip, LetterType
+from .models.dataclasses import CommandTrip, LetterType
 
 
 class CommandTripProcessor:

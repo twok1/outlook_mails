@@ -1,8 +1,8 @@
 from typing import List
 
-from src.models import Reminder
-from src.models.dataclasses import CommandTrip
-from src.russian_calendar import RussianCalendar
+from .models import Reminder
+from .models.dataclasses import CommandTrip
+from .russian_calendar import RussianCalendar
 
 class ReminderCalculator:
     def __init__(self) -> None:
