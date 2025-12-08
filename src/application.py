@@ -2,7 +2,7 @@ from .command_trip_processor import CommandTripProcessor
 from .email_parser import EmailParser
 from .email_reader import EmailReader
 from .reminder_calculator import ReminderCalculator
-from .reminder_manager import ReminderManager
+from .reminder_manager_outlook import ReminderManager
 
 
 class Application:
