@@ -1,10 +1,12 @@
 import os
 from typing import List
 import sertifi
+from dotenv import load_env
 
 from exchangelib import Credentials, Configuration, Account, DELEGATE, Q
 from .models import EmailData
-from .filters import ClassFilter, SubjectFilter, SenderEmailFilter
+
+load_env()
 
 class EmailReader:
     def __init__(self):
