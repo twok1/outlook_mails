@@ -1,12 +1,11 @@
 import os
 from typing import List
-import sertifi
-from dotenv import load_env
+from dotenv import load_dotenv
 
-from exchangelib import Credentials, Configuration, Account, DELEGATE, Q
+from exchangelib import BaseProtocol, Credentials, Configuration, Account, DELEGATE, Q, NoVerifyHTTPAdapter
 from .models import EmailData
 
-load_env()
+load_dotenv()
 
 class EmailReader:
     def __init__(self):
@@ -30,12 +29,11 @@ class EmailReader:
         credentials = Credentials(username=EMAIL, password=PASSWORD)
 
         # print("Подключение без SSL проверки")
-        # BaseProtocol.HTTP_ADAPTER_CLS = NoVerifyHTTPAdapter
+        BaseProtocol.HTTP_ADAPTER_CLS = NoVerifyHTTPAdapter
         
         config = Configuration(
             server=SERVER,
             credentials=credentials,
-            verify_ssl=sertifi.where(),
         )
         
         account = Account(
