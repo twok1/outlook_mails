@@ -4,11 +4,8 @@ import schedule
 from .application import Application
 
 def create():
-    try:
-        app = Application()
-        app.run()
-    except:
-        pass
+    app = Application()
+    app.run()
     del(app)
 
 def main():

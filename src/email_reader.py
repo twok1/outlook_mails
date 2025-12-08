@@ -12,12 +12,15 @@ class EmailReader:
         self.outlook = self.connect_to_exchange()
     
     def run(self):
-        messages = self.outlook.inbox.filter(
-            sender__email_adress_exact='iasup_notify@greenatom.ru'
-        ).filter(
-            Q(subject__contains='Информирование о направлении в командировку') |
-            Q(subject__contains='Информирование об изменении данных командировки')
-        )
+        query = (
+                Q(sender_email_address__exact='iasup_notify@greenatom.ru') &
+                (
+                    Q(subject__contains='Информирование о направлении в командировку') |
+                    Q(subject__contains='Информирование об изменении данных командировки')
+                )
+            )
+        
+        messages = self.outlook.inbox.filter(query)
         return self._process_to_emaildata(messages=messages)
     
     def connect_to_exchange(self):
