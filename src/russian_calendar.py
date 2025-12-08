@@ -68,6 +68,8 @@ class RussianCalendar:
     
     def is_working_day(self, date: datetime) -> bool:
         str_year = str(date.year)
+        if not self.holidays.get(str_year, ''):
+            return True
         for line in self.holidays[str_year]:
             if self._date_eq_line(date, line):
                 return False
