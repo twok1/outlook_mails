@@ -15,3 +15,4 @@ def main():
     schedule.every().hour.at('00').do(create)
     while True:
         schedule.run_pending()
+        time.sleep(1)
