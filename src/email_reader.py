@@ -1,10 +1,12 @@
 import os
 from typing import List
 from dotenv import load_dotenv
+import warnings
 
 from exchangelib import BaseProtocol, Credentials, Configuration, Account, DELEGATE, Q, NoVerifyHTTPAdapter
 from .models import EmailData
 
+warnings.filterwarnings('ignore')
 load_dotenv()
 
 class EmailReader:
@@ -13,13 +15,12 @@ class EmailReader:
     
     def run(self):
         query = (
-                Q(sender_email_address__exact='iasup_notify@greenatom.ru') &
+            Q(sender='iasup_notify@greenatom.ru') &
                 (
                     Q(subject__contains='Информирование о направлении в командировку') |
                     Q(subject__contains='Информирование об изменении данных командировки')
                 )
             )
-        
         messages = self.outlook.inbox.filter(query)
         return self._process_to_emaildata(messages=messages)
     
@@ -53,12 +54,12 @@ class EmailReader:
         for msg in messages:
             new_messages.append(
                 EmailData(
-                    msg.EntryID, 
-                    msg.Subject,
-                    msg.SenderName,
-                    msg.Body,
-                    msg.ReceivedTime,
-                    msg.Class
+                    msg.id, 
+                    msg.subject,
+                    msg.sender,
+                    msg.text_body,
+                    msg.datetime_received,
+                    msg.item_class
                 )
             )
         return new_messages
