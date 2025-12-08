@@ -10,7 +10,7 @@ def create():
 
 def main():
     create()
-    schedule.every().hour.at('00').do(create)
+    schedule.every().hour.at('00:00').do(create)
     while True:
         schedule.run_pending()
         time.sleep(1)
