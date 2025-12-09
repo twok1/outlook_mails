@@ -9,7 +9,6 @@ import sys
 import argparse
 from pathlib import Path
 import fnmatch
-import re
 
 class TreePrinter:
     def __init__(self, root_dir, max_level=None, show_all=False, use_gitignore=True):
