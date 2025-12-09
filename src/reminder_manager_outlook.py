@@ -1,28 +1,28 @@
 import warnings
 from datetime import datetime, timedelta
-from pathlib import Path
-from typing import List, Optional, Any
-import os
-from dotenv import load_dotenv
+from typing import List, Any
 
 from exchangelib import (
-    BaseProtocol, Credentials, Configuration, Account, DELEGATE, EWSDate,
-    NoVerifyHTTPAdapter, CalendarItem, Body, EWSDateTime
+    EWSDate,
+    CalendarItem, 
+    Body, 
+    EWSDateTime
 )
+
+from .outlook_connector import OutlookConnector
 
 from .models import Reminder
 
 # Отключаем warnings
 warnings.filterwarnings("ignore")
-load_dotenv()
 
 
 class ReminderManager:
-    def __init__(self) -> None:
+    def __init__(self, outlook: OutlookConnector) -> None:
         """
         Инициализация с совместимым API.
         """
-        self.account = self._connect_to_exchange()
+        self.account = outlook.outlook
         
         print(f"ReminderManager инициализирован (exchangelib)")
     
@@ -41,28 +41,6 @@ class ReminderManager:
         else:
             # Пробуем стандартный метод
             return obj.date()
-
-    def _connect_to_exchange(self) -> Any:
-        """Подключение к Exchange (скрытый метод)."""
-        EMAIL = os.getenv('EMAIL')
-        PASSWORD = os.getenv('PASS')
-        SERVER = os.getenv('SERV')
-        
-        if not all([EMAIL, PASSWORD, SERVER]):
-            raise ValueError("Не все переменные окружения установлены")
-        
-        # Отключаем SSL проверку
-        BaseProtocol.HTTP_ADAPTER_CLS = NoVerifyHTTPAdapter
-        
-        credentials = Credentials(username=EMAIL, password=PASSWORD)
-        config = Configuration(server=SERVER, credentials=credentials)
-        
-        return Account(
-            primary_smtp_address=EMAIL,
-            config=config,
-            autodiscover=False,
-            access_type=DELEGATE
-        )
     
     def _get_all_reminds(self) -> List[Any]:
         """
