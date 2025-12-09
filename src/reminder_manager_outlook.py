@@ -116,7 +116,9 @@ class ReminderManager:
                     start=start_ews,
                     end=start_ews + timedelta(days=1),  # Для AllDayEvent обычно 1 день
                     is_all_day=True,  # AllDayEvent = True
-                    reminder_minutes_before_start=15  # ReminderMinutesBeforeStart = 15
+                    reminder_minutes_before_start=15,  # ReminderMinutesBeforeStart = 15
+                    reminder_due_by=start_ews,
+                    reminder_is_set=True,
                 )
                 
                 event.save(send_meeting_invitations='SendToNone')
