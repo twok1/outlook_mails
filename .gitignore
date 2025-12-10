@@ -2,7 +2,7 @@
 /venv
 /old
 /mails
-/show_tree.py
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
