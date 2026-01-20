@@ -5,7 +5,10 @@ from .application import Application
 
 def create():
     app = Application()
-    app.run()
+    try:
+        app.run()
+    except:
+        time.sleep(60)
     del(app)
 
 def main():
