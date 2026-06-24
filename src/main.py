@@ -16,4 +16,4 @@ def main():
     schedule.every().hour.at('00:00').do(create)
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(60)
