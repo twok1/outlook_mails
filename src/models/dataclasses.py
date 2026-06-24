@@ -47,4 +47,4 @@ class Reminder:
     reminder_date: datetime
     subject: str
     text: str
-    reminder_id: Optional[str] = None
+    reminder_id: str = None  # Опциональное поле для хранения ID в Exchange
