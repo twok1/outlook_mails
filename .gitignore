@@ -191,3 +191,5 @@ ignoring_lines.txt
 get_description.txt
 .vscode/
 src/data/existing_reminds.json
+data/existing_reminds.json
+project_dump.txt
