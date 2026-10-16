@@ -29,6 +29,7 @@ class CommandTrip:
     location: str
     purpose: str
     letter_type: LetterType
+    sequence_number: Optional[int] = None
     
     def _get_date(self, date: datetime):
         return datetime.strftime(date, FORMAT_DATE)

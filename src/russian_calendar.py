@@ -1,5 +1,7 @@
 import configparser
 import json
+import os
+import sys
 from pathlib import Path
 from typing import List
 from datetime import datetime, timedelta
@@ -8,52 +10,67 @@ import requests
 from .models.dataclasses import CommandTrip
 
 
+def get_app_root() -> Path:
+    """
+    Возвращает корневую папку приложения.
+    - для exe: папка рядом с исполняемым файлом
+    - для скрипта: корень проекта (на уровень выше src/)
+    """
+    if getattr(sys, 'frozen', False):
+        return Path(os.path.dirname(sys.executable))
+    # __file__ = .../src/russian_calendar.py -> parent = src -> parent.parent = корень
+    return Path(__file__).resolve().parent.parent
+
+
 class RussianCalendar:
     CALENDAR_URLS = (
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/holidays.json',
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/shortDays.json',
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/workingHolidays.json',
     )
-    
-    SCRIPT_PATH = Path(__file__).parent.parent / 'config_mails.ini'
-    
+
+    # Путь к config_mails.ini — рядом с exe или в корне проекта
+    SCRIPT_PATH = get_app_root() / 'config_mails.ini'
+
     CONFIG_BLOCK = 'mails'
 
     config = configparser.ConfigParser()
-    config.read('./config_mails.ini', encoding='utf-8')
-    
-    WORKING_PERIOD =  (
-        int(config.get(CONFIG_BLOCK, 'END_LOCK')), 
-        int(config.get(CONFIG_BLOCK, 'START_LOCK'))
+    # Читаем по абсолютному пути — не зависит от cwd
+    if not config.read(str(SCRIPT_PATH), encoding='utf-8'):
+        raise FileNotFoundError(
+            f"Не найден конфиг: {SCRIPT_PATH}"
+        )
+
+    WORKING_PERIOD = (
+        int(config.get(CONFIG_BLOCK, 'END_LOCK')),
+        int(config.get(CONFIG_BLOCK, 'START_LOCK')),
     )
-    
+
     START_NOTIFICATION = list(
         [int(i) for i in config.get(CONFIG_BLOCK, 'START_NOTIFICATION').split(', ')]
     )
     END_NOTIFICATION = list(
         [int(i) for i in config.get(CONFIG_BLOCK, 'END_NOTIFICATION').split(', ')]
     )
-    
+
     def __init__(self) -> None:
-        self.cache_dir = Path('data')
+        # Папка для кэша JSON-календарей — рядом с exe или в корне проекта
+        self.cache_dir = get_app_root() / 'data'
         self.cache_dir.mkdir(exist_ok=True)
         self.holidays, self.short_days, self.working_holidays = self._download_calendars()
-        
+
     def _download_calendars(self):
         result = []
         for calendar, url in zip(('holidays', 'short_days', 'working_holidays'), self.CALENDAR_URLS):
             result.append(self._load_calendar(calendar, url))
-        
         return result
-        
+
     def _load_calendar(self, calendar: str, url: str):
-        file_path = Path('data') / f'{calendar}.json'
+        file_path = self.cache_dir / f'{calendar}.json'
         if not file_path.exists():
             response = requests.get(url=url)
             response.raise_for_status()
-            
             data = response.json()
-            
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=True)
         else:
