@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 from unittest.mock import Mock, patch
-from src.email_reader import EmailReader
+from src.integrations.outlook.email_reader import EmailReader
 from src.models.dataclasses import EmailData
 
 class TestEmailReader(unittest.TestCase):

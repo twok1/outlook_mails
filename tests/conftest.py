@@ -51,11 +51,11 @@ def sample_command_trip():
 @pytest.fixture
 def email_parser():
     """Фикстура для EmailParser"""
-    from src.email_parser import EmailParser
+    from src.parsers.email_parser import EmailParser
     return EmailParser()
 
 @pytest.fixture
 def command_trip_processor():
     """Фикстура для CommandTripProcessor"""
-    from src.command_trip_processor import CommandTripProcessor
+    from src.core.command_trip_processor import CommandTripProcessor
     return CommandTripProcessor()

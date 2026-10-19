@@ -1,15 +1,21 @@
-from .outlook_connector import OutlookConnector
-from .command_trip_processor import CommandTripProcessor
-from .email_parser import EmailParser
-from .email_reader import EmailReader
-from .reminder_calculator import ReminderCalculator
-from .reminder_manager_outlook import ReminderManager
-from .trip_directory_manager import TripDirectoryManager
-from .config import settings
+from .integrations.outlook.outlook_connector import OutlookConnector
+from .core.command_trip_processor import CommandTripProcessor
+from .parsers.email_parser import EmailParser
+from .integrations.outlook.email_reader import EmailReader
+from .core.reminder_calculator import ReminderCalculator
+from .integrations.outlook.reminder_manager_outlook import ReminderManager
+from .integrations.filesystem.trip_directory_manager import TripDirectoryManager
+from .utils.config import settings
+from .utils.logger_config import setup_logging
+import logging
 
 
 class Application:
     def __init__(self) -> None:
+        setup_logging(app_root=settings.app_root)
+        self.logger = logging.getLogger(__name__)
+        self.logger.info('Запуск приложения...')
+        
         outlook = OutlookConnector()
         self.mail_reader = EmailReader(outlook=outlook)
         self.mail_parser = EmailParser()

@@ -1,7 +1,7 @@
 # tests/test_command_trip_processor.py
 import unittest
 from datetime import datetime
-from src.command_trip_processor import CommandTripProcessor
+from src.core.command_trip_processor import CommandTripProcessor
 from src.models.dataclasses import CommandTrip, EmailData, LetterType
 
 class TestCommandTripProcessor(unittest.TestCase):

@@ -3,7 +3,7 @@ from typing import List
 from exchangelib import Q
 
 from .outlook_connector import OutlookConnector
-from .models import EmailData
+from ...models import EmailData
 
 
 class EmailReader:

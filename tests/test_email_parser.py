@@ -1,7 +1,7 @@
 # tests/test_email_parser.py
 import unittest
 from datetime import datetime
-from src.email_parser import EmailParser
+from src.parsers.email_parser import EmailParser
 from src.models.dataclasses import EmailData, LetterType
 
 class TestEmailParser(unittest.TestCase):

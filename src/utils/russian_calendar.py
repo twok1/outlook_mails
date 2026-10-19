@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import requests
 
 from .config import Config
-from .models.dataclasses import CommandTrip
+from ..models.dataclasses import CommandTrip
 
 
 def get_app_root() -> Path:

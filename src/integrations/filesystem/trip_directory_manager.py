@@ -4,10 +4,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
+import logging
 
-from .config import Config
-from .models.dataclasses import CommandTrip, LetterType
+from ...utils.config import Config
+from ...models.dataclasses import CommandTrip, LetterType
 
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class _ExistingDirInfo:
@@ -77,11 +80,6 @@ class TripDirectoryManager:
             if message.letter_type != LetterType.NEW:
                 continue
             if message.start_date.year != self.current_year:
-                print(
-                    f'[TripDirectoryManager] Пропуск (год {message.start_date.year} '
-                    f'!= текущий {self.current_year}): '
-                    f'{message.order_number}'
-                )
                 continue
 
             order_key = self._normalize_order_key(message.order_number)
@@ -90,10 +88,6 @@ class TripDirectoryManager:
             if order_key in existing_by_order:
                 info = existing_by_order[order_key]
                 message.sequence_number = info.number
-                print(
-                    f'[TripDirectoryManager] Каталог уже существует для приказа '
-                    f'{message.order_number}: {info.path.name}'
-                )
                 continue
 
             # Уже создан в этом же запуске (два письма по одному приказу)
@@ -154,17 +148,12 @@ class TripDirectoryManager:
 
             target_path = target_dir / item.name
             if target_path.exists():
-                print(
-                    f'[TripDirectoryManager] Архив: уже есть {target_path}, '
-                    f'пропуск перемещения {item}'
-                )
                 continue
 
             try:
                 shutil.move(str(item), str(target_path))
-                print(f'[TripDirectoryManager] Архив: {item.name} -> {year}/')
             except OSError as e:
-                print(f'[TripDirectoryManager] Ошибка архивации {item}: {e}')
+                logger.error(f'Ошибка архивации {item}', exc_info=True)
 
     # ---------- сканирование ----------
 
@@ -235,7 +224,6 @@ class TripDirectoryManager:
         trip_dir = self.base_path / dir_name
 
         if trip_dir.exists():
-            print(f'[TripDirectoryManager] Каталог уже существует: {trip_dir}')
             return trip_dir
 
         try:
@@ -243,9 +231,8 @@ class TripDirectoryManager:
             subdir = trip_dir / self.SUBDIR_NAME
             subdir.mkdir(parents=True, exist_ok=True)
 
-            print(f'[TripDirectoryManager] Создан каталог: {trip_dir}')
-            print(f'[TripDirectoryManager] Создан подкаталог: {subdir}')
+            logger.info(f'Создан каталог: {trip_dir}, {subdir}')
             return trip_dir
         except OSError as e:
-            print(f'[TripDirectoryManager] Ошибка создания каталога: {e}')
+            logger.error(f'Ошибка создания каталога', exc_info=True)
             return None

@@ -1,10 +1,13 @@
 # src/config.py
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List
 import configparser
+import logging
 import os
 import sys
-from pathlib import Path
-from dataclasses import dataclass
-from typing import List
+
+logger = logging.getLogger(__name__)
 
 def get_app_root() -> Path:
     if getattr(sys, 'frozen', False):
@@ -52,5 +55,5 @@ class Config:
 try:
     settings = Config.load()
 except Exception as e:
-    print(f"Критическая ошибка загрузки конфигурации: {e}")
+    logger.error(f"Критическая ошибка загрузки конфигурации", exc_info=True)
     sys.exit(1)

@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 from unittest.mock import Mock, patch
-from src.reminder_calculator import ReminderCalculator
+from src.core.reminder_calculator import ReminderCalculator
 from src.models.dataclasses import CommandTrip, EmailData, LetterType
 
 class TestReminderCalculator(unittest.TestCase):

@@ -4,9 +4,11 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 from datetime import datetime
+import logging
 
-from .models import Reminder
+from ...models import Reminder
 
+logger = logging.getLogger(__name__)
 
 class ReminderStorage:
     """Класс для хранения и управления напоминаниями в JSON-файле."""
@@ -72,7 +74,7 @@ class ReminderStorage:
                     reminder.reminder_id = item['id']
                 reminders.append(reminder)
             except Exception as e:
-                print(f"Ошибка загрузки напоминания: {e}")
+                logger.error(f"Ошибка загрузки напоминания", exc_info=True)
         return reminders
     
     def get_reminder_key(self, reminder: Reminder) -> Tuple[str, str]:
@@ -148,7 +150,8 @@ class ReminderStorage:
         return to_add
     
     def get_reminders_to_remove(self, current_reminders: List[Reminder]) -> List[Reminder]:
-        """Возвращает список напоминаний, которые нужно удалить (существуют в хранилище, но отсутствуют в текущем списке)."""
+        """Возвращает список напоминаний, которые нужно удалить (существуют
+        в хранилище, но отсутствуют в текущем списке)."""
         existing = self.get_all_reminders()
         current_keys = {self.get_reminder_key(r) for r in current_reminders}
         
