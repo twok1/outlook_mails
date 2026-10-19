@@ -3,7 +3,7 @@ import configparser
 import os
 import sys
 from pathlib import Path
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List
 
 def get_app_root() -> Path:

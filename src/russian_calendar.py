@@ -6,7 +6,7 @@ from typing import List
 from datetime import datetime, timedelta
 import requests
 
-from .config import settings, Config
+from .config import Config
 from .models.dataclasses import CommandTrip
 
 

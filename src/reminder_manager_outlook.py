@@ -1,9 +1,8 @@
 import warnings
-from datetime import datetime, timedelta
-from typing import List, Any
+from datetime import timedelta
+from typing import List
 
 from exchangelib import (
-    EWSDate,
     CalendarItem, 
     Body, 
     EWSDateTime
