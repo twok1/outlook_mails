@@ -6,8 +6,8 @@ from typing import List
 from datetime import datetime, timedelta
 import requests
 
-from src.config import settings, Config
-from src.models.dataclasses import CommandTrip
+from .config import settings, Config
+from .models.dataclasses import CommandTrip
 
 
 def get_app_root() -> Path:
