@@ -5,6 +5,7 @@ from .email_reader import EmailReader
 from .reminder_calculator import ReminderCalculator
 from .reminder_manager_outlook import ReminderManager
 from .trip_directory_manager import TripDirectoryManager
+from .config import settings
 
 
 class Application:
@@ -13,10 +14,9 @@ class Application:
         self.mail_reader = EmailReader(outlook=outlook)
         self.mail_parser = EmailParser()
         self.command_trip_processor = CommandTripProcessor()
-        self.remind_calculator = ReminderCalculator()
+        self.remind_calculator = ReminderCalculator(settings=settings)
         self.remind_manager = ReminderManager(outlook=outlook)
-        # путь берётся из config_mails.ini автоматически
-        self.trip_directory_manager = TripDirectoryManager()
+        self.trip_directory_manager = TripDirectoryManager(settings=settings)  
 
     def run(self):
         messages = self.mail_reader.run()

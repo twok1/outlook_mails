@@ -1,4 +1,3 @@
-import configparser
 import re
 import shutil
 from dataclasses import dataclass
@@ -6,8 +5,8 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
 
+from .config import Config
 from .models.dataclasses import CommandTrip, LetterType
-from .russian_calendar import get_app_root
 
 
 @dataclass
@@ -45,30 +44,15 @@ class TripDirectoryManager:
     )
     SUBDIR_NAME = 'отчетка'
     CONFIG_BLOCK = 'files'
-    CONFIG_KEY = 'TRIPS_BASE_PATH'
 
-    def __init__(self, base_path: Optional[str] = None) -> None:
-        if base_path is None:
-            base_path = self._read_base_path_from_config()
-        self.base_path = Path(base_path)
+    def __init__(self, settings: Config) -> None:
+        self.base_path = Path(settings.trips_base_path)
         self.base_path.mkdir(parents=True, exist_ok=True)
 
         self.current_year = datetime.now().year
 
         # Сначала архивируем прошлые годы
         self._archive_previous_years()
-
-    # ---------- конфиг ----------
-
-    @classmethod
-    def _read_base_path_from_config(cls) -> str:
-        config_path = get_app_root() / 'config_mails.ini'
-        config = configparser.ConfigParser()
-        if not config.read(str(config_path), encoding='utf-8'):
-            raise FileNotFoundError(f"Не найден конфиг: {config_path}")
-        return config.get(cls.CONFIG_BLOCK, cls.CONFIG_KEY)
-
-    # ---------- публичный API ----------
 
     def run(self, messages: List[CommandTrip]) -> None:
         # 1. Собираем уже существующие каталоги текущего года

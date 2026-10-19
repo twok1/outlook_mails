@@ -2,7 +2,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import List, Set, Tuple
+from typing import List, Tuple
 from datetime import datetime
 
 from .models import Reminder

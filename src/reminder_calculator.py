@@ -3,10 +3,11 @@ from typing import List
 from .models import Reminder
 from .models.dataclasses import CommandTrip
 from .russian_calendar import RussianCalendar
+from .config import settings, Config
 
 class ReminderCalculator:
-    def __init__(self) -> None:
-        self.calendar = RussianCalendar()
+    def __init__(self, settings: Config) -> None:
+        self.calendar = RussianCalendar(settings=settings)
     
     def run(self, messages: List[CommandTrip]) -> List[Reminder]:
         reminders: List[Reminder] = []
