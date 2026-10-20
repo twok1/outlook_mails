@@ -1,10 +1,13 @@
 import re
+import logging
 
 from datetime import datetime
 from typing import List, Optional, Tuple
 
 from ..models import EmailData, CommandTrip
 from ..models.dataclasses import LetterType
+
+logger = logging.getLogger(__name__)
 
 class EmailParser:
     DATES_LINE_PHRASE = 'Вы направлены в командировку с '
@@ -13,10 +16,16 @@ class EmailParser:
     PURPOSE_LINE_PHRASE = 'С целью - '
     CHANGED_COMMAND_PHRASE = 'Условия указанной командировки изменены. Ознакомьтесь, пожалуйста, с новыми условиями.'
     
-    def run(self, messages: List[EmailData]):
+    def run(self, messages: List[EmailData]) -> List[CommandTrip]:
         parsed_messages = []
         for message in messages:
-            parsed_messages.append(self.parse(message))
+            try:
+                trip = self.parse(message)
+                if trip:
+                    parsed_messages.append(trip)
+            except Exception as e:
+                logger.error(f'Ошибка при парсинге письма {message.message_id}', exc_info=True)
+                continue
         return parsed_messages
         
     def parse(self, msg: EmailData) -> Optional[CommandTrip]:

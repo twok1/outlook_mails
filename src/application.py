@@ -25,12 +25,22 @@ class Application:
         self.trip_directory_manager = TripDirectoryManager(settings=settings)  
 
     def run(self):
-        messages = self.mail_reader.run()
+        try:
+            messages = self.mail_reader.run()
+        except Exception as e:
+            self.logger.error(f'Ошибка при чтении почты', exc_info=True)
+            return
         parsed_messages = self.mail_parser.run(messages)
         processed_messages = self.command_trip_processor.run(parsed_messages)
 
         # создание каталогов командировок
-        self.trip_directory_manager.run(processed_messages)
+        try:
+            self.trip_directory_manager.run(processed_messages)
+        except Exception:
+            self.logger.error(f'Ошибка при создании каталога командировки', exc_info=True)
 
         reminds = self.remind_calculator.run(processed_messages)
-        self.remind_manager.run(reminds=reminds)
+        try:
+            self.remind_manager.run(reminds=reminds)
+        except Exception:
+            self.logger.error(f'Ошибка при создании напоминания', exc_info=True)
