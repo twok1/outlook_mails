@@ -8,7 +8,7 @@ FORMAT_DATE = '%d.%m.%Y'
 class LetterType(Enum):
     NEW = 'new'
     UPDATE = 'update'
-    CANCELATION = 'cancelation'
+    CANCELLATION = 'cancellation'
 
 @dataclass
 class EmailData:
@@ -16,11 +16,14 @@ class EmailData:
     subject: str
     sender: str
     body: str
-    recieved_date: datetime
-    msg_class: int
+    received_date: datetime
+    msg_type: int
     
 @dataclass
 class CommandTrip:
+    """
+    Представляет информацию о командировке, сформированную на основе приказа.
+    """
     email_data: EmailData
     start_date: datetime
     end_date: datetime
@@ -31,21 +34,41 @@ class CommandTrip:
     letter_type: LetterType
     sequence_number: Optional[int] = None
     
-    def _get_date(self, date: datetime):
+    def _fmt_date(self, date: datetime) -> str:
+        """форматирует дату в нужный формат
+
+        Args:
+            date (datetime): форматирвуемая дата
+
+        Returns:
+            str: строка даты нужного формата
+        """
         return datetime.strftime(date, FORMAT_DATE)
     
     def get_subject(self) -> str:
-        return f'[командировка] {self.order_number} {self._get_date(self.order_date)} '\
-            f'{self._get_date(self.start_date)} - {self._get_date(self.end_date)}'
+        """возвращает тему для напоминания
+
+        Returns:
+            str: тема напоминания
+        """
+        return f'[командировка] {self.order_number} {self._fmt_date(self.order_date)} '\
+            f'{self._fmt_date(self.start_date)} - {self._fmt_date(self.end_date)}'
     
     def get_text(self) -> str:
+        """возвращает текст напоминания
+
+        Returns:
+            str: текст напоминания
+        """
         return f'{self.purpose}\n{self.location}\n'\
-                f'{self._get_date(self.start_date)} - {self._get_date(self.end_date)}\n'\
-                f'/ {self.order_number} от {self._get_date(self.order_date)}'
+                f'{self._fmt_date(self.start_date)} - {self._fmt_date(self.end_date)}\n'\
+                f'/ {self.order_number} от {self._fmt_date(self.order_date)}'
 
 @dataclass
 class Reminder:
+    """датакласс напоминания
+    """
     reminder_date: datetime
     subject: str
     text: str
-    reminder_id: str = None  # Опциональное поле для хранения ID в Exchange
+    reminder_id: Optional[str] = None  # Опциональное поле для хранения ID в Exchange

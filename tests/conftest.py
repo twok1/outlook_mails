@@ -18,8 +18,8 @@ def sample_email_data():
         subject="Test Subject",
         sender="test@example.com",
         body="Test body",
-        recieved_date=datetime(2024, 1, 1, 10, 0, 0),
-        msg_class=1
+        received_date=datetime(2024, 1, 1, 10, 0, 0),
+        msg_type=1
     )
 
 @pytest.fixture
@@ -33,8 +33,8 @@ def sample_command_trip():
         subject="Test Subject",
         sender="test@example.com",
         body="Test body",
-        recieved_date=datetime(2024, 1, 1, 10, 0, 0),
-        msg_class=1
+        received_date=datetime(2024, 1, 1, 10, 0, 0),
+        msg_type=1
     )
     
     return CommandTrip(

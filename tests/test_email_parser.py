@@ -34,8 +34,8 @@ class TestEmailParser(unittest.TestCase):
             subject="Информирование о направлении в командировку",
             sender="iasup_notify@greenatom.ru",
             body=self.new_command_email_body,
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
         
         result = self.parser.parse(email_data)
@@ -56,8 +56,8 @@ class TestEmailParser(unittest.TestCase):
             subject="Информирование об изменении данных командировки",
             sender="iasup_notify@greenatom.ru",
             body=self.update_command_email_body,
-            recieved_date=datetime(2024, 1, 6),
-            msg_class=1
+            received_date=datetime(2024, 1, 6),
+            msg_type=1
         )
         
         result = self.parser.parse(email_data)
@@ -79,16 +79,16 @@ class TestEmailParser(unittest.TestCase):
                 subject="Информирование о направлении в командировку",
                 sender="iasup_notify@greenatom.ru",
                 body=self.new_command_email_body,
-                recieved_date=datetime(2024, 1, 1),
-                msg_class=1
+                received_date=datetime(2024, 1, 1),
+                msg_type=1
             ),
             EmailData(
                 message_id="test2",
                 subject="Информирование об изменении данных командировки",
                 sender="iasup_notify@greenatom.ru",
                 body=self.update_command_email_body,
-                recieved_date=datetime(2024, 1, 6),
-                msg_class=1
+                received_date=datetime(2024, 1, 6),
+                msg_type=1
             )
         ]
         
@@ -107,8 +107,8 @@ class TestEmailParser(unittest.TestCase):
             subject="Некорректный email",
             sender="test@example.com",
             body=invalid_email_body,
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
         
         with self.assertRaises(ValueError):
@@ -123,8 +123,8 @@ class TestEmailParser(unittest.TestCase):
             subject="Test",
             sender="test@example.com",
             body=email_body,
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
         
         # Должен вернуть None, так как нет точки после номера приказа

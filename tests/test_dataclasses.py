@@ -13,16 +13,16 @@ class TestDataclasses(unittest.TestCase):
             subject="Test Subject",
             sender="test@example.com",
             body="Test body",
-            recieved_date=test_date,
-            msg_class=1
+            received_date=test_date,
+            msg_type=1
         )
         
         self.assertEqual(email_data.message_id, "test_id")
         self.assertEqual(email_data.subject, "Test Subject")
         self.assertEqual(email_data.sender, "test@example.com")
         self.assertEqual(email_data.body, "Test body")
-        self.assertEqual(email_data.recieved_date, test_date)
-        self.assertEqual(email_data.msg_class, 1)
+        self.assertEqual(email_data.received_date, test_date)
+        self.assertEqual(email_data.msg_type, 1)
     
     def test_command_trip_creation(self):
         """Тестирование создания CommandTrip"""
@@ -36,8 +36,8 @@ class TestDataclasses(unittest.TestCase):
             subject="Test Subject",
             sender="test@example.com",
             body="Test body",
-            recieved_date=test_date,
-            msg_class=1
+            received_date=test_date,
+            msg_type=1
         )
         
         command_trip = CommandTrip(
@@ -66,8 +66,8 @@ class TestDataclasses(unittest.TestCase):
             subject="Test Subject",
             sender="test@example.com",
             body="Test body",
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
         
         command_trip = CommandTrip(
@@ -91,8 +91,8 @@ class TestDataclasses(unittest.TestCase):
             subject="Test Subject",
             sender="test@example.com",
             body="Test body",
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
         
         command_trip = CommandTrip(
@@ -113,7 +113,7 @@ class TestDataclasses(unittest.TestCase):
         """Тестирование перечисления LetterType"""
         self.assertEqual(LetterType.NEW.value, 'new')
         self.assertEqual(LetterType.UPDATE.value, 'update')
-        self.assertEqual(LetterType.CANCELATION.value, 'cancelation')
+        self.assertEqual(LetterType.CANCELLATION.value, 'cancelation')
 
 if __name__ == '__main__':
     unittest.main()

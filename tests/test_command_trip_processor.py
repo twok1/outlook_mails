@@ -16,8 +16,8 @@ class TestCommandTripProcessor(unittest.TestCase):
             subject="Test",
             sender="test@example.com",
             body="Test body",
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
     
     def test_process_single_new_trip(self):
@@ -48,8 +48,8 @@ class TestCommandTripProcessor(unittest.TestCase):
                 subject="Test1",
                 sender="test@example.com",
                 body="Body1",
-                recieved_date=datetime(2024, 1, 1),
-                msg_class=1
+                received_date=datetime(2024, 1, 1),
+                msg_type=1
             ),
             start_date=datetime(2024, 1, 10),
             end_date=datetime(2024, 1, 15),
@@ -67,8 +67,8 @@ class TestCommandTripProcessor(unittest.TestCase):
                 subject="Test2",
                 sender="test@example.com",
                 body="Body2",
-                recieved_date=datetime(2024, 1, 2),
-                msg_class=1
+                received_date=datetime(2024, 1, 2),
+                msg_type=1
             ),
             start_date=datetime(2024, 1, 12),
             end_date=datetime(2024, 1, 17),
@@ -94,8 +94,8 @@ class TestCommandTripProcessor(unittest.TestCase):
                 subject="Test1",
                 sender="test@example.com",
                 body="Body1",
-                recieved_date=datetime(2024, 1, 1),
-                msg_class=1
+                received_date=datetime(2024, 1, 1),
+                msg_type=1
             ),
             start_date=datetime(2024, 1, 10),
             end_date=datetime(2024, 1, 15),
@@ -112,8 +112,8 @@ class TestCommandTripProcessor(unittest.TestCase):
                 subject="Test2",
                 sender="test@example.com",
                 body="Body2",
-                recieved_date=datetime(2024, 1, 2),
-                msg_class=1
+                received_date=datetime(2024, 1, 2),
+                msg_type=1
             ),
             start_date=datetime(2024, 1, 20),
             end_date=datetime(2024, 1, 25),
@@ -216,8 +216,8 @@ class TestCommandTripProcessor(unittest.TestCase):
                 subject="Test1",
                 sender="test@example.com",
                 body="Body1",
-                recieved_date=datetime(2024, 1, 3),
-                msg_class=1
+                received_date=datetime(2024, 1, 3),
+                msg_type=1
             ),
             start_date=datetime(2024, 1, 10),
             end_date=datetime(2024, 1, 15),
@@ -234,8 +234,8 @@ class TestCommandTripProcessor(unittest.TestCase):
                 subject="Test2",
                 sender="test@example.com",
                 body="Body2",
-                recieved_date=datetime(2024, 1, 1),
-                msg_class=1
+                received_date=datetime(2024, 1, 1),
+                msg_type=1
             ),
             start_date=datetime(2024, 1, 20),
             end_date=datetime(2024, 1, 25),
@@ -248,8 +248,8 @@ class TestCommandTripProcessor(unittest.TestCase):
         
         # trip2 должен быть первым, так как получен раньше
         result = self.processor.run([trip1, trip2])
-        self.assertEqual(result[0].email_data.recieved_date, datetime(2024, 1, 1))
-        self.assertEqual(result[1].email_data.recieved_date, datetime(2024, 1, 3))
+        self.assertEqual(result[0].email_data.received_date, datetime(2024, 1, 1))
+        self.assertEqual(result[1].email_data.received_date, datetime(2024, 1, 3))
 
 if __name__ == '__main__':
     unittest.main()

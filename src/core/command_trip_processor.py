@@ -6,7 +6,7 @@ from ..models.dataclasses import CommandTrip, LetterType
 class CommandTripProcessor:
     def run(self, messages: List[CommandTrip]) -> List[CommandTrip]:
         processed_messages: List[CommandTrip] = []
-        messages = sorted(messages, key = lambda x: x.email_data.recieved_date)
+        messages = sorted(messages, key = lambda x: x.email_data.received_date)
         for message in messages:
             if message.letter_type == LetterType.NEW:
                 processed_messages.append(message)

@@ -63,7 +63,7 @@ class TripDirectoryManager:
 
         # 2. Сортируем входящие по дате получения (стабильный порядок)
         sorted_messages = sorted(
-            messages, key=lambda m: m.email_data.recieved_date
+            messages, key=lambda m: m.email_data.received_date
         )
 
         # 3. Присваиваем номера только тем NEW, для которых каталога ещё нет
