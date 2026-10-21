@@ -3,7 +3,7 @@ from typing import List
 from exchangelib import Q
 
 from .outlook_connector import OutlookConnector
-from ...models import EmailData
+from src.models import EmailData
 
 
 class EmailReader:
@@ -26,12 +26,12 @@ class EmailReader:
         for msg in messages:
             new_messages.append(
                 EmailData(
-                    msg.id, 
-                    msg.subject,
-                    msg.sender,
-                    msg.text_body,
-                    msg.datetime_received,
-                    msg.item_class
+                    message_id=msg.id, 
+                    subject=msg.subject,
+                    sender=msg.sender.email_address,
+                    body=msg.text_body,
+                    received_date=msg.datetime_received,
+                    msg_type=msg.item_class
                 )
             )
         return new_messages

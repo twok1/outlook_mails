@@ -6,8 +6,8 @@ from typing import Dict, List, Optional
 from datetime import datetime
 import logging
 
-from ...utils.config import Config
-from ...models.dataclasses import CommandTrip, LetterType
+from src.utils import Config
+from src.models import CommandTrip, LetterType
 
 
 logger = logging.getLogger(__name__)

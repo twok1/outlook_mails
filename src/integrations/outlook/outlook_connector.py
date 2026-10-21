@@ -1,6 +1,5 @@
 import os
 import warnings
-import sys
 
 from exchangelib import (
     BaseProtocol, Credentials, Configuration, Account, DELEGATE,
@@ -8,19 +7,11 @@ from exchangelib import (
 )
 from dotenv import load_dotenv
 
-
-def _get_app_root() -> str:
-    if getattr(sys, 'frozen', False):
-        return os.path.dirname(sys.executable)
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from src.utils import settings
 
 
-# .env ищем рядом с exe / в корне проекта — по абсолютному пути
-_APP_ROOT = _get_app_root()
-load_dotenv(dotenv_path=os.path.join(_APP_ROOT, '.env'))
-
+load_dotenv(dotenv_path=settings.app_root / '.env')
 warnings.filterwarnings('ignore')
-
 
 class OutlookConnector:
     def __init__(self) -> None:
@@ -34,7 +25,7 @@ class OutlookConnector:
 
         if not all((EMAIL, PASSWORD, SERVER)):
             raise RuntimeError(
-                f"Не заданы EMAIL/PASS/SERV. Проверьте .env в {_APP_ROOT}"
+                f"Не заданы EMAIL/PASS/SERV. Проверьте .env в {settings.app_root}"
             )
 
         credentials = Credentials(username=EMAIL, password=PASSWORD)

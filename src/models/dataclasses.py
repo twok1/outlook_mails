@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 FORMAT_DATE = '%d.%m.%Y'
 
@@ -19,7 +19,7 @@ class EmailData(BaseModel):
     sender: str
     body: str
     received_date: datetime
-    msg_type: int
+    msg_type: str
     
 class CommandTrip(BaseModel):
     """

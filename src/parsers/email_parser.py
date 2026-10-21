@@ -4,8 +4,7 @@ import logging
 from datetime import datetime
 from typing import List, Optional, Tuple
 
-from ..models import EmailData, CommandTrip
-from ..models.dataclasses import LetterType
+from src.models import CommandTrip, EmailData, LetterType
 
 logger = logging.getLogger(__name__)
 

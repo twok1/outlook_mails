@@ -9,9 +9,10 @@ from exchangelib import (
     EWSDateTime
 )
 
-from .outlook_connector import OutlookConnector
-from ...models import Reminder
-from ..filesystem.reminder_storage import ReminderStorage
+from src.integrations.filesystem import ReminderStorage
+from src.integrations.outlook import OutlookConnector
+from src.models import Reminder
+from src.utils import settings
 
 # Отключаем warnings
 warnings.filterwarnings("ignore")
@@ -24,7 +25,7 @@ class ReminderManager:
         Инициализация с совместимым API.
         """
         self.account = outlook.outlook
-        self.storage = ReminderStorage()
+        self.storage = ReminderStorage(settings=settings)
         logger.info(f"ReminderManager инициализирован (с локальным хранилищем)")
     
     def _make_reminds(self, reminds: List[Reminder]) -> None:

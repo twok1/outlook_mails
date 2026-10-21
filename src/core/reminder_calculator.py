@@ -1,9 +1,7 @@
 from typing import List
 
-from ..models import Reminder
-from ..models.dataclasses import CommandTrip
-from ..utils.russian_calendar import RussianCalendar
-from ..utils.config import settings, Config
+from src.models import CommandTrip, Reminder
+from src.utils import Config, RussianCalendar
 
 class ReminderCalculator:
     def __init__(self, settings: Config) -> None:

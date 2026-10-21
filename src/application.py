@@ -1,13 +1,10 @@
-from .integrations.outlook.outlook_connector import OutlookConnector
-from .core.command_trip_processor import CommandTripProcessor
-from .parsers.email_parser import EmailParser
-from .integrations.outlook.email_reader import EmailReader
-from .core.reminder_calculator import ReminderCalculator
-from .integrations.outlook.reminder_manager_outlook import ReminderManager
-from .integrations.filesystem.trip_directory_manager import TripDirectoryManager
-from .utils.config import settings
-from .utils.logger_config import setup_logging
 import logging
+
+from src.integrations.outlook import EmailReader, OutlookConnector, ReminderManager
+from src.integrations.filesystem import TripDirectoryManager
+from src.core import CommandTripProcessor, ReminderCalculator
+from src.parsers import EmailParser
+from src.utils import settings, setup_logging
 
 
 class Application:

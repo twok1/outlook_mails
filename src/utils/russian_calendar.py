@@ -1,26 +1,10 @@
 import json
-import os
-import sys
-from pathlib import Path
 from typing import List
 from datetime import datetime, timedelta
 import requests
 
-from .config import Config
-from ..models.dataclasses import CommandTrip
-
-
-def get_app_root() -> Path:
-    """
-    Возвращает корневую папку приложения.
-    - для exe: папка рядом с исполняемым файлом
-    - для скрипта: корень проекта (на уровень выше src/)
-    """
-    if getattr(sys, 'frozen', False):
-        return Path(os.path.dirname(sys.executable))
-    # __file__ = .../src/russian_calendar.py -> parent = src -> parent.parent = корень
-    return Path(__file__).resolve().parent.parent
-
+from src.utils import Config
+from src.models import CommandTrip
 
 class RussianCalendar:
     CALENDAR_URLS = (
@@ -28,10 +12,10 @@ class RussianCalendar:
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/shortDays.json',
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/workingHolidays.json',
     )
-
+    
     def __init__(self, settings: Config) -> None:
         # Папка для кэша JSON-календарей — рядом с exe или в корне проекта
-        self.cache_dir = get_app_root() / 'data'
+        self.cache_dir = settings.data_path
         self.cache_dir.mkdir(exist_ok=True)
         self.working_period = (settings.end_lock, settings.start_lock)
         self.start_notification = settings.start_notification_offsets

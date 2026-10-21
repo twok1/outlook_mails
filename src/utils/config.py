@@ -19,6 +19,7 @@ class Config:
     # Пути
     app_root: Path
     trips_base_path: Path
+    data_path: Path
     
     # Настройки уведомлений
     start_lock: int
@@ -40,6 +41,7 @@ class Config:
 
         return cls(
             app_root=root,
+            data_path=root / 'data', 
             trips_base_path=Path(parser.get('files', 'TRIPS_BASE_PATH')),
             start_lock=parser.getint('mails', 'START_LOCK'),
             end_lock=parser.getint('mails', 'END_LOCK'),
