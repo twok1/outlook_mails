@@ -14,12 +14,19 @@ class Application:
         self.logger.info('Запуск приложения...')
         
         outlook = OutlookConnector()
+        self.logger.info('OutlookConnector загружен')
         self.mail_reader = EmailReader(outlook=outlook)
+        self.logger.info('EmailReader загружен')
         self.mail_parser = EmailParser()
+        self.logger.info('EmailParser загружен')
         self.command_trip_processor = CommandTripProcessor()
+        self.logger.info('CommandTripProcessor загружен')
         self.remind_calculator = ReminderCalculator(settings=settings)
+        self.logger.info('ReminderCalculator загружен')
         self.remind_manager = ReminderManager(outlook=outlook)
+        self.logger.info('ReminderManager загружен')
         self.trip_directory_manager = TripDirectoryManager(settings=settings)  
+        self.logger.info('TripDirectoryManager загружен')
 
     def run(self):
         try:
