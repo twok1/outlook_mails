@@ -2,7 +2,7 @@ import logging
 
 from src.integrations.outlook import EmailReader, OutlookConnector, ReminderManager
 from src.integrations.filesystem import TripDirectoryManager
-from src.core import CommandTripProcessor, ReminderCalculator
+from src.core import CommandTripProcessor, ReminderCalculator, get_trip_query
 from src.parsers import EmailParser
 from src.utils import settings, setup_logging
 
@@ -30,14 +30,13 @@ class Application:
 
     def run(self):
         try:
-            messages = self.mail_reader.run()
+            trip_messages = self.mail_reader.run(query=get_trip_query())
         except Exception as e:
             self.logger.error(f'Ошибка при чтении почты', exc_info=True)
             return
-        parsed_messages = self.mail_parser.run(messages)
+        parsed_messages = self.mail_parser.run(trip_messages)
         processed_messages = self.command_trip_processor.run(parsed_messages)
 
-        # создание каталогов командировок
         try:
             self.trip_directory_manager.run(processed_messages)
         except Exception:
