@@ -1,21 +1,23 @@
 import warnings
-from datetime import datetime, timedelta
-from typing import List, Any
+from datetime import timedelta
+from typing import List
+import logging
 
 from exchangelib import (
-    EWSDate,
     CalendarItem, 
     Body, 
     EWSDateTime
 )
 
-from .outlook_connector import OutlookConnector
-from .models import Reminder
-from .reminder_storage import ReminderStorage
+from src.integrations.filesystem import ReminderStorage
+from src.integrations.outlook import OutlookConnector
+from src.models import Reminder
+from src.utils import settings
 
 # Отключаем warnings
 warnings.filterwarnings("ignore")
 
+logger = logging.getLogger(__name__)
 
 class ReminderManager:
     def __init__(self, outlook: OutlookConnector) -> None:
@@ -23,8 +25,8 @@ class ReminderManager:
         Инициализация с совместимым API.
         """
         self.account = outlook.outlook
-        self.storage = ReminderStorage()
-        print(f"ReminderManager инициализирован (с локальным хранилищем)")
+        self.storage = ReminderStorage(settings=settings)
+        logger.info(f"ReminderManager инициализирован (с локальным хранилищем)")
     
     def _make_reminds(self, reminds: List[Reminder]) -> None:
         """
@@ -66,10 +68,10 @@ class ReminderManager:
                 remind.reminder_id = str(event.id)
                 created_reminders.append(remind)
                 
-                print(f"Создано: {remind.subject} на {remind.reminder_date.strftime('%d.%m.%Y')}")
+                logger.info(f"Создано: {remind.subject} на {remind.reminder_date.strftime('%d.%m.%Y')}")
                 
             except Exception as e:
-                print(f"Ошибка создания напоминания: {e}")
+                logger.error(f"Ошибка создания напоминания", exc_info=True)
                 import traceback
                 traceback.print_exc()
                 continue
@@ -77,7 +79,7 @@ class ReminderManager:
         # Сохраняем созданные напоминания в хранилище
         if created_reminders:
             added_count = self.storage.add_reminders(created_reminders)
-            print(f"Сохранено в хранилище: {added_count} напоминаний")
+            logger.info(f"Сохранено в хранилище: {added_count} напоминаний")
     
     def _remove_reminds(self, remove_reminders: List[Reminder]) -> None:
         """
@@ -92,23 +94,20 @@ class ReminderManager:
                         item = self.account.calendar.get(id=reminder.reminder_id)
                         if item:
                             item.delete()
-                            print(f"Удалено из календаря: {reminder.subject}")
+                            logger.info(f"Удалено из календаря: {reminder.subject}")
                     except Exception as e:
-                        print(f"Не удалось найти событие для удаления: {e}")
+                        logger.error(f"Не удалось найти событие для удаления", exc_info=True)
                 
                 # Удаляем из хранилища
                 self.storage.remove_reminder(reminder)
                 
             except Exception as e:
-                print(f"Ошибка удаления напоминания: {e}")
+                logger.error(f"Ошибка удаления напоминания", exc_info=True)
     
     def run(self, reminds: List[Reminder]) -> None:
         """
         Основной метод синхронизации.
         """
-        print("\n" + "="*60)
-        print("СИНХРОНИЗАЦИЯ НАПОМИНАНИЙ (локальное хранилище)")
-        print("="*60)
         
         try:
             # Получаем список напоминаний для создания
@@ -116,11 +115,7 @@ class ReminderManager:
             
             # Получаем список напоминаний для удаления
             to_remove = self.storage.get_reminders_to_remove(reminds)
-            
-            print(f"Текущих напоминаний в хранилище: {len(self.storage.get_all_reminders())}")
-            print(f"Новых напоминаний для создания: {len(to_add)}")
-            print(f"Напоминаний для удаления: {len(to_remove)}")
-            
+                        
             # Создаем новые напоминания
             if to_add:
                 self._make_reminds(to_add)
@@ -129,11 +124,10 @@ class ReminderManager:
             if to_remove:
                 self._remove_reminds(to_remove)
             
-            print(f"\nСинхронизация завершена!")
-            print(f"   Добавлено: {len(to_add)}")
-            print(f"   Удалено: {len(to_remove)}")
+            logger.info(f"   Добавлено напоминаний: {len(to_add)}")
+            logger.info(f"   Удалено напоминаний: {len(to_remove)}")
             
         except Exception as e:
-            print(f"Ошибка синхронизации: {e}")
+            logger.error("Ошибка синхронизации", exc_info=True)
             import traceback
             traceback.print_exc()

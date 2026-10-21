@@ -18,8 +18,8 @@ def sample_email_data():
         subject="Test Subject",
         sender="test@example.com",
         body="Test body",
-        recieved_date=datetime(2024, 1, 1, 10, 0, 0),
-        msg_class=1
+        received_date=datetime(2024, 1, 1, 10, 0, 0),
+        msg_type=1
     )
 
 @pytest.fixture
@@ -33,8 +33,8 @@ def sample_command_trip():
         subject="Test Subject",
         sender="test@example.com",
         body="Test body",
-        recieved_date=datetime(2024, 1, 1, 10, 0, 0),
-        msg_class=1
+        received_date=datetime(2024, 1, 1, 10, 0, 0),
+        msg_type=1
     )
     
     return CommandTrip(
@@ -51,11 +51,11 @@ def sample_command_trip():
 @pytest.fixture
 def email_parser():
     """Фикстура для EmailParser"""
-    from src.email_parser import EmailParser
+    from src.parsers.email_parser import EmailParser
     return EmailParser()
 
 @pytest.fixture
 def command_trip_processor():
     """Фикстура для CommandTripProcessor"""
-    from src.command_trip_processor import CommandTripProcessor
+    from src.core.command_trip_processor import CommandTripProcessor
     return CommandTripProcessor()

@@ -1,0 +1,1 @@
+pyinstaller --onedir --onefile --hiddenimport=win32timezone --name=mails run.pyw

@@ -1,10 +1,12 @@
 import re
+import logging
 
 from datetime import datetime
 from typing import List, Optional, Tuple
 
-from .models import EmailData, CommandTrip
-from .models.dataclasses import LetterType
+from src.models import CommandTrip, EmailData, LetterType
+
+logger = logging.getLogger(__name__)
 
 class EmailParser:
     DATES_LINE_PHRASE = 'Вы направлены в командировку с '
@@ -13,10 +15,16 @@ class EmailParser:
     PURPOSE_LINE_PHRASE = 'С целью - '
     CHANGED_COMMAND_PHRASE = 'Условия указанной командировки изменены. Ознакомьтесь, пожалуйста, с новыми условиями.'
     
-    def run(self, messages: List[EmailData]):
+    def run(self, messages: List[EmailData]) -> List[CommandTrip]:
         parsed_messages = []
         for message in messages:
-            parsed_messages.append(self.parse(message))
+            try:
+                trip = self.parse(message)
+                if trip:
+                    parsed_messages.append(trip)
+            except Exception as e:
+                logger.error(f'Ошибка при парсинге письма {message.message_id}', exc_info=True)
+                continue
         return parsed_messages
         
     def parse(self, msg: EmailData) -> Optional[CommandTrip]:
@@ -24,14 +32,14 @@ class EmailParser:
         start_date, end_date, order_date, letter_type, order_number, location, purpose = self._parse_and_check_for_errors(msg)
         
         return CommandTrip(
-            msg,
-            start_date,
-            end_date,
-            order_date,
-            order_number,
-            location,
-            purpose,
-            letter_type
+            email_data=msg,
+            start_date=start_date,
+            end_date=end_date,
+            order_date=order_date,
+            order_number=order_number,
+            location=location,
+            purpose=purpose,
+            letter_type=letter_type
         )
     
     def _parse_and_check_for_errors(self, msg: EmailData) -> Tuple[datetime, datetime, datetime, LetterType, str, str, str]:
@@ -51,7 +59,7 @@ class EmailParser:
                 raise ValueError(f'Ошибка парсинга {msg.body}, не найден {descr}')
         return start_date, end_date, order_date, letter_type, order_number, location, purpose
     
-    def _parse_dates(self, body: str) -> Optional[Tuple[str, datetime, datetime, datetime, LetterType]]:
+    def _parse_dates(self, body: str) -> Tuple[str, datetime, datetime, datetime, LetterType]:
         letter_type = LetterType.NEW
         for source_line in body.splitlines():
             if source_line == self.CHANGED_COMMAND_PHRASE:
@@ -61,22 +69,26 @@ class EmailParser:
                 if len(line) == 3:
                     start, end, order = tuple(map(lambda d: datetime.strptime(d, self.DATES_PATTERN), line))
                     return source_line, start, end, order, letter_type
+        raise ValueError('Ошибка парсинга тела письма')
                 
-    def _parse_order_number(self, line) -> Optional[str]:
+    def _parse_order_number(self, line) -> str:
         order_num = re.search(r'№ ([^.]+)\.', line)
         if order_num:
             return order_num.group(1)
+        raise ValueError("Ошибка парсинга номера приказа")
     
-    def _parse_location(self, body: str) -> Optional[str]:
+    def _parse_location(self, body: str) -> str:
         for line in body.splitlines():
             if line.startswith(self.LOCATION_LINE_PHRASE):
                 location = re.search(rf'{self.LOCATION_LINE_PHRASE}([^\n]+)\.', line)
                 if location:
                     return location.group(1)
+        raise ValueError("Ошибка парсинга места командирования")
                 
-    def _parse_purpose(self, body: str) -> Optional[str]:
+    def _parse_purpose(self, body: str) -> str:
         for line in body.splitlines():
             if line.startswith(self.PURPOSE_LINE_PHRASE):
                 purpose = re.search(rf'{self.PURPOSE_LINE_PHRASE}([^\n]+)', line)
                 if purpose:
                     return purpose.group(1)
+        raise ValueError("Ошибка парсинга цели команлирования")

@@ -1,26 +1,10 @@
-import configparser
 import json
-import os
-import sys
-from pathlib import Path
 from typing import List
 from datetime import datetime, timedelta
 import requests
 
-from .models.dataclasses import CommandTrip
-
-
-def get_app_root() -> Path:
-    """
-    Возвращает корневую папку приложения.
-    - для exe: папка рядом с исполняемым файлом
-    - для скрипта: корень проекта (на уровень выше src/)
-    """
-    if getattr(sys, 'frozen', False):
-        return Path(os.path.dirname(sys.executable))
-    # __file__ = .../src/russian_calendar.py -> parent = src -> parent.parent = корень
-    return Path(__file__).resolve().parent.parent
-
+from src.utils import Config
+from src.models import CommandTrip
 
 class RussianCalendar:
     CALENDAR_URLS = (
@@ -28,35 +12,14 @@ class RussianCalendar:
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/shortDays.json',
         'https://raw.githubusercontent.com/iposho/holidays-calendar-ru/refs/heads/main/src/data/workingHolidays.json',
     )
-
-    # Путь к config_mails.ini — рядом с exe или в корне проекта
-    SCRIPT_PATH = get_app_root() / 'config_mails.ini'
-
-    CONFIG_BLOCK = 'mails'
-
-    config = configparser.ConfigParser()
-    # Читаем по абсолютному пути — не зависит от cwd
-    if not config.read(str(SCRIPT_PATH), encoding='utf-8'):
-        raise FileNotFoundError(
-            f"Не найден конфиг: {SCRIPT_PATH}"
-        )
-
-    WORKING_PERIOD = (
-        int(config.get(CONFIG_BLOCK, 'END_LOCK')),
-        int(config.get(CONFIG_BLOCK, 'START_LOCK')),
-    )
-
-    START_NOTIFICATION = list(
-        [int(i) for i in config.get(CONFIG_BLOCK, 'START_NOTIFICATION').split(', ')]
-    )
-    END_NOTIFICATION = list(
-        [int(i) for i in config.get(CONFIG_BLOCK, 'END_NOTIFICATION').split(', ')]
-    )
-
-    def __init__(self) -> None:
+    
+    def __init__(self, settings: Config) -> None:
         # Папка для кэша JSON-календарей — рядом с exe или в корне проекта
-        self.cache_dir = get_app_root() / 'data'
+        self.cache_dir = settings.data_path
         self.cache_dir.mkdir(exist_ok=True)
+        self.working_period = (settings.end_lock, settings.start_lock)
+        self.start_notification = settings.start_notification_offsets
+        self.end_notification = settings.end_notification_offsets
         self.holidays, self.short_days, self.working_holidays = self._download_calendars()
 
     def _download_calendars(self):
@@ -104,12 +67,12 @@ class RussianCalendar:
         result = []
         for date, reminder_days in zip(
             (msg.start_date, msg.end_date), 
-            (self.START_NOTIFICATION, self.END_NOTIFICATION)
+            (self.start_notification, self.end_notification)
         ):
             for reminder_day in reminder_days:
                 reminder_date = date + timedelta(reminder_day)
                 remidner_date_source = date + timedelta(reminder_day)
-                while reminder_date.day not in range(*self.WORKING_PERIOD)\
+                while reminder_date.day not in range(*self.working_period)\
                         or not self.is_working_day(reminder_date):
                     reminder_date -= timedelta(days=1)
                 result.append(reminder_date)

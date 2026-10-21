@@ -1,42 +1,22 @@
 import json
-import os
-import sys
-from pathlib import Path
-from typing import List, Set, Tuple
+from typing import List, Tuple
 from datetime import datetime
+import logging
 
-from .models import Reminder
+from src.models import Reminder
+from src.utils import Config
 
+logger = logging.getLogger(__name__)
 
 class ReminderStorage:
     """Класс для хранения и управления напоминаниями в JSON-файле."""
     
-    def __init__(self):
+    def __init__(self, settings: Config):
         # Определяем правильный путь для хранения данных
-        self.storage_dir = self._get_data_dir()
+        self.storage_dir = settings.data_path
         self.storage_dir.mkdir(exist_ok=True)
         self.storage_file = self.storage_dir / 'existing_reminds.json'
         self._ensure_storage_exists()
-    
-    def _get_data_dir(self) -> Path:
-        """
-        Определяет правильную директорию для хранения данных.
-        Для exe использует папку рядом с исполняемым файлом.
-        Для разработки использует папку src/data.
-        """
-        if getattr(sys, 'frozen', False):
-            # Запуск из exe
-            # Используем папку рядом с exe-файлом
-            exe_dir = Path(os.path.dirname(sys.executable))
-            data_dir = exe_dir / 'data'
-        else:
-            # Запуск из скрипта (разработка)
-            # Используем папку в корне проекта
-            data_dir = Path(__file__).parent.parent / 'data'
-        
-        # Создаем директорию, если её нет
-        data_dir.mkdir(exist_ok=True)
-        return data_dir
     
     def _ensure_storage_exists(self):
         """Создает файл хранилища, если он не существует."""
@@ -72,7 +52,7 @@ class ReminderStorage:
                     reminder.reminder_id = item['id']
                 reminders.append(reminder)
             except Exception as e:
-                print(f"Ошибка загрузки напоминания: {e}")
+                logger.error(f"Ошибка загрузки напоминания", exc_info=True)
         return reminders
     
     def get_reminder_key(self, reminder: Reminder) -> Tuple[str, str]:
@@ -148,7 +128,8 @@ class ReminderStorage:
         return to_add
     
     def get_reminders_to_remove(self, current_reminders: List[Reminder]) -> List[Reminder]:
-        """Возвращает список напоминаний, которые нужно удалить (существуют в хранилище, но отсутствуют в текущем списке)."""
+        """Возвращает список напоминаний, которые нужно удалить (существуют
+        в хранилище, но отсутствуют в текущем списке)."""
         existing = self.get_all_reminders()
         current_keys = {self.get_reminder_key(r) for r in current_reminders}
         

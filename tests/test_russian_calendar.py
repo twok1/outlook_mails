@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open
-from src.russian_calendar import RussianCalendar
+from src.utils.russian_calendar import RussianCalendar
 
 class TestRussianCalendar(unittest.TestCase):
     

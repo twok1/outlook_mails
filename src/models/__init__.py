@@ -1,7 +1,8 @@
-from .dataclasses import EmailData, CommandTrip, Reminder
+from .dataclasses import EmailData, CommandTrip, Reminder, LetterType
 
 __all__ = [
     'EmailData',
     'CommandTrip',
     'Reminder',
+    'LetterType',
 ]

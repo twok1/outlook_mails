@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 from unittest.mock import Mock, patch
-from src.email_reader import EmailReader
+from src.integrations.outlook.email_reader import EmailReader
 from src.models.dataclasses import EmailData
 
 class TestEmailReader(unittest.TestCase):
@@ -53,7 +53,7 @@ class TestEmailReader(unittest.TestCase):
         self.assertEqual(result[0].subject, "Информирование о направлении в командировку")
         self.assertEqual(result[0].sender.email_address, "iasup_notify@greenatom.ru")
         self.assertEqual(result[0].body, "Тело письма 1")
-        self.assertEqual(result[0].msg_class, 1)
+        self.assertEqual(result[0].msg_type, 1)
     
     def test_run_with_no_matching_messages(self):
         """Тестирование когда нет подходящих сообщений"""
@@ -126,15 +126,15 @@ class TestEmailReader(unittest.TestCase):
         self.assertEqual(result[0].subject, "Test Subject 1")
         self.assertEqual(result[0].sender.email_address, "test1@example.com")
         self.assertEqual(result[0].body, "Body 1")
-        self.assertEqual(result[0].recieved_date, datetime(2024, 1, 1, 10, 0, 0))
-        self.assertEqual(result[0].msg_class, 1)
+        self.assertEqual(result[0].received_date, datetime(2024, 1, 1, 10, 0, 0))
+        self.assertEqual(result[0].msg_type, 1)
         
         self.assertEqual(result[1].message_id, "msg2")
         self.assertEqual(result[1].subject, "Test Subject 2")
         self.assertEqual(result[1].sender.email_address, "test2@example.com")
         self.assertEqual(result[1].body, "Body 2")
-        self.assertEqual(result[1].recieved_date, datetime(2024, 1, 2, 10, 0, 0))
-        self.assertEqual(result[1].msg_class, 2)
+        self.assertEqual(result[1].received_date, datetime(2024, 1, 2, 10, 0, 0))
+        self.assertEqual(result[1].msg_type, 2)
     
     def test_process_to_emaildata_empty_list(self):
         """Тестирование конвертации пустого списка сообщений"""

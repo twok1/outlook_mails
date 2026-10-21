@@ -30,8 +30,8 @@ class TestApplication(unittest.TestCase):
                 subject="Информирование о направлении в командировку",
                 sender="iasup_notify@greenatom.ru",
                 body="Тестовое тело",
-                recieved_date=datetime(2024, 1, 1),
-                msg_class=1
+                received_date=datetime(2024, 1, 1),
+                msg_type=1
             )
         ]
         
@@ -45,8 +45,8 @@ class TestApplication(unittest.TestCase):
                     subject="Test",
                     sender="test@example.com",
                     body="Test body",
-                    recieved_date=datetime(2024, 1, 1),
-                    msg_class=1
+                    received_date=datetime(2024, 1, 1),
+                    msg_type=1
                 ),
                 start_date=datetime(2024, 1, 10),
                 end_date=datetime(2024, 1, 15),
@@ -68,8 +68,8 @@ class TestApplication(unittest.TestCase):
                     subject="Test",
                     sender="test@example.com",
                     body="Test body",
-                    recieved_date=datetime(2024, 1, 1),
-                    msg_class=1
+                    received_date=datetime(2024, 1, 1),
+                    msg_type=1
                 ),
                 start_date=datetime(2024, 1, 10),
                 end_date=datetime(2024, 1, 15),

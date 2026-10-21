@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 from unittest.mock import Mock, patch
-from src.reminder_calculator import ReminderCalculator
+from src.core.reminder_calculator import ReminderCalculator
 from src.models.dataclasses import CommandTrip, EmailData, LetterType
 
 class TestReminderCalculator(unittest.TestCase):
@@ -20,8 +20,8 @@ class TestReminderCalculator(unittest.TestCase):
             subject="Test",
             sender="test@example.com",
             body="Test body",
-            recieved_date=datetime(2024, 1, 1),
-            msg_class=1
+            received_date=datetime(2024, 1, 1),
+            msg_type=1
         )
     
     def test_run_empty_list(self):
