@@ -33,14 +33,14 @@ class EmailParser:
         start_date, end_date, order_date, letter_type, order_number, location, purpose = self._parse_and_check_for_errors(msg)
         
         return CommandTrip(
-            msg,
-            start_date,
-            end_date,
-            order_date,
-            order_number,
-            location,
-            purpose,
-            letter_type
+            email_data=msg,
+            start_date=start_date,
+            end_date=end_date,
+            order_date=order_date,
+            order_number=order_number,
+            location=location,
+            purpose=purpose,
+            letter_type=letter_type
         )
     
     def _parse_and_check_for_errors(self, msg: EmailData) -> Tuple[datetime, datetime, datetime, LetterType, str, str, str]:
@@ -60,7 +60,7 @@ class EmailParser:
                 raise ValueError(f'Ошибка парсинга {msg.body}, не найден {descr}')
         return start_date, end_date, order_date, letter_type, order_number, location, purpose
     
-    def _parse_dates(self, body: str) -> Optional[Tuple[str, datetime, datetime, datetime, LetterType]]:
+    def _parse_dates(self, body: str) -> Tuple[str, datetime, datetime, datetime, LetterType]:
         letter_type = LetterType.NEW
         for source_line in body.splitlines():
             if source_line == self.CHANGED_COMMAND_PHRASE:
@@ -70,22 +70,26 @@ class EmailParser:
                 if len(line) == 3:
                     start, end, order = tuple(map(lambda d: datetime.strptime(d, self.DATES_PATTERN), line))
                     return source_line, start, end, order, letter_type
+        raise ValueError('Ошибка парсинга тела письма')
                 
-    def _parse_order_number(self, line) -> Optional[str]:
+    def _parse_order_number(self, line) -> str:
         order_num = re.search(r'№ ([^.]+)\.', line)
         if order_num:
             return order_num.group(1)
+        raise ValueError("Ошибка парсинга номера приказа")
     
-    def _parse_location(self, body: str) -> Optional[str]:
+    def _parse_location(self, body: str) -> str:
         for line in body.splitlines():
             if line.startswith(self.LOCATION_LINE_PHRASE):
                 location = re.search(rf'{self.LOCATION_LINE_PHRASE}([^\n]+)\.', line)
                 if location:
                     return location.group(1)
+        raise ValueError("Ошибка парсинга места командирования")
                 
-    def _parse_purpose(self, body: str) -> Optional[str]:
+    def _parse_purpose(self, body: str) -> str:
         for line in body.splitlines():
             if line.startswith(self.PURPOSE_LINE_PHRASE):
                 purpose = re.search(rf'{self.PURPOSE_LINE_PHRASE}([^\n]+)', line)
                 if purpose:
                     return purpose.group(1)
+        raise ValueError("Ошибка парсинга цели команлирования")

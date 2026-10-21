@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 FORMAT_DATE = '%d.%m.%Y'
 
@@ -10,8 +11,9 @@ class LetterType(Enum):
     UPDATE = 'update'
     CANCELLATION = 'cancellation'
 
-@dataclass
-class EmailData:
+class EmailData(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    
     message_id: str
     subject: str
     sender: str
@@ -19,8 +21,7 @@ class EmailData:
     received_date: datetime
     msg_type: int
     
-@dataclass
-class CommandTrip:
+class CommandTrip(BaseModel):
     """
     Представляет информацию о командировке, сформированную на основе приказа.
     """
@@ -33,6 +34,24 @@ class CommandTrip:
     purpose: str
     letter_type: LetterType
     sequence_number: Optional[int] = None
+    
+    @field_validator('order_number')
+    @classmethod
+    def order_number_must_not_be_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError('Номер приказа не может быть пустым')
+        return v
+    
+    @model_validator(mode='after')
+    def check_dates_order(self) -> 'CommandTrip':
+        if self.start_date > self.end_date:
+            raise ValueError('Дата начала не может быть позже окончания')
+        return self
+    
+    @property
+    def duration_days(self) -> int:
+        return  (self.end_date - self.start_date).days
+        
     
     def _fmt_date(self, date: datetime) -> str:
         """форматирует дату в нужный формат
