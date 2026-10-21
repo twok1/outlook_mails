@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def get_app_root() -> Path:
     if getattr(sys, 'frozen', False):
         return Path(os.path.dirname(sys.executable))
-    return Path(__file__).resolve().parent.parent
+    return Path(__file__).resolve().parent.parent.parent
 
 @dataclass(frozen=True)  # frozen=True делает конфиг неизменяемым после создания
 class Config:
