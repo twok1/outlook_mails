@@ -10,14 +10,7 @@ class EmailReader:
     def __init__(self, outlook: OutlookConnector) -> None:
         self.outlook = outlook.outlook
     
-    def run(self):
-        query = (
-            Q(sender='iasup_notify@greenatom.ru') &
-                (
-                    Q(subject__contains='Информирование о направлении в командировку') |
-                    Q(subject__contains='Информирование об изменении данных командировки')
-                )
-            )
+    def run(self, query: Q):
         messages = self.outlook.inbox.filter(query)
         return self._process_to_emaildata(messages=messages)
     
