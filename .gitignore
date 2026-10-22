@@ -183,3 +183,4 @@ project_dump.txt
 .continue/
 config_mails.ini
 data/processed_messages.json
+mails.exe
