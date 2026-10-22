@@ -5,10 +5,11 @@ from datetime import datetime
 from typing import List, Optional, Tuple
 
 from src.models import CommandTrip, EmailData, LetterType
+from src.core.interfaces import BaseMailParser
 
 logger = logging.getLogger(__name__)
 
-class EmailParser:
+class TripEmailParser(BaseMailParser):
     DATES_LINE_PHRASE = 'Вы направлены в командировку с '
     DATES_PATTERN = '%d.%m.%Y'
     LOCATION_LINE_PHRASE = 'В: '

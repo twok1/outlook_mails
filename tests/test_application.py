@@ -123,7 +123,7 @@ class TestApplication(unittest.TestCase):
         
         # Проверяем что все компоненты были созданы
         self.assertIsNotNone(app.mail_reader)
-        self.assertIsNotNone(app.mail_parser)
+        self.assertIsNotNone(app.trip_mail_parser)
         self.assertIsNotNone(app.command_trip_processor)
         self.assertIsNotNone(app.remind_calculator)
         self.assertIsNotNone(app.remind_manager)

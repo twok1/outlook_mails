@@ -104,17 +104,17 @@ class ReminderManager:
             except Exception as e:
                 logger.error(f"Ошибка удаления напоминания", exc_info=True)
     
-    def run(self, reminds: List[Reminder]) -> None:
+    def run(self, reminders: List[Reminder]) -> None:
         """
         Основной метод синхронизации.
         """
         
         try:
             # Получаем список напоминаний для создания
-            to_add = self.storage.get_reminders_to_add(reminds)
+            to_add = self.storage.get_reminders_to_add(reminders)
             
             # Получаем список напоминаний для удаления
-            to_remove = self.storage.get_reminders_to_remove(reminds)
+            to_remove = self.storage.get_reminders_to_remove(reminders)
                         
             # Создаем новые напоминания
             if to_add:

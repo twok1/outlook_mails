@@ -1,10 +1,9 @@
 import logging
 
-from src.integrations.outlook import EmailReader, OutlookConnector, ReminderManager
-from src.integrations.filesystem import TripDirectoryManager
-from src.core import CommandTripProcessor, ReminderCalculator
-from src.parsers import EmailParser
+from src.integrations.outlook import EmailReader, OutlookConnector
+from src.core import get_routes
 from src.utils import settings, setup_logging
+from src.integrations.filesystem import ProcessedMessagesStorage
 
 
 class Application:
@@ -13,31 +12,32 @@ class Application:
         self.logger = logging.getLogger(__name__)
         self.logger.info('Запуск приложения...')
         
-        outlook = OutlookConnector()
-        self.mail_reader = EmailReader(outlook=outlook)
-        self.mail_parser = EmailParser()
-        self.command_trip_processor = CommandTripProcessor()
-        self.remind_calculator = ReminderCalculator(settings=settings)
-        self.remind_manager = ReminderManager(outlook=outlook)
-        self.trip_directory_manager = TripDirectoryManager(settings=settings)  
+        self.outlook = OutlookConnector()
+        self.logger.info('OutlookConnector загружен')
+        self.mail_reader = EmailReader(outlook=self.outlook)
+        
+        self.processed_storage = ProcessedMessagesStorage(settings=settings)
+        self.logger.info('ProcessedMessagesStorage загружен')
 
     def run(self):
-        try:
-            messages = self.mail_reader.run()
-        except Exception as e:
-            self.logger.error(f'Ошибка при чтении почты', exc_info=True)
-            return
-        parsed_messages = self.mail_parser.run(messages)
-        processed_messages = self.command_trip_processor.run(parsed_messages)
+        for route in get_routes(outlook_connector=self.outlook, settings=settings):
+            try:
+                messages = self.mail_reader.run(query=route.query)
+            except Exception as e:
+                self.logger.error(f'Ошибка при чтении почты', exc_info=True)
+                continue
+            
+            parser_name = type(route.parser).__name__
 
-        # создание каталогов командировок
-        try:
-            self.trip_directory_manager.run(processed_messages)
-        except Exception:
-            self.logger.error(f'Ошибка при создании каталога командировки', exc_info=True)
+            # Отсеиваем дубликаты персонально для этого парсера
+            new_messages = self.processed_storage.filter_new(messages, parser_name)
+            if not new_messages:
+                continue
 
-        reminds = self.remind_calculator.run(processed_messages)
-        try:
-            self.remind_manager.run(reminds=reminds)
-        except Exception:
-            self.logger.error(f'Ошибка при создании напоминания', exc_info=True)
+            parsed_items = route.parser.run(new_messages)
+            if parsed_items:
+                route.processor.process(parsed_items)
+
+            # Отмечаем письма как обработанные именно этим парсером
+            self.processed_storage.mark_as_processed(new_messages, parser_name)
+    

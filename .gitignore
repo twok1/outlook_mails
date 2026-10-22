@@ -177,20 +177,9 @@ cython_debug/
 .pypirc
 
 #my dirs & files
-old/
-svbu_cfg/
-scriptida_python_scripts/
-PROGS/
-non_using_pdf_types/
-config.ini
-get_description.txt
-Access_not_in_GET.txt
-get_description.txt
-tzb.txt
-ignoring_lines.txt
-get_description.txt
 .vscode/
-src/data/existing_reminds.json
-data/existing_reminds.json
+data/
 project_dump.txt
 .continue/
+config_mails.ini
+data/processed_messages.json

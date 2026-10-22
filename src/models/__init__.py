@@ -1,8 +1,23 @@
-from .dataclasses import EmailData, CommandTrip, Reminder, LetterType
+from .dataclasses import (
+    AbsenceData,
+    AbsencePeriod,
+    AbsenceSubstitute,
+    CommandTrip, 
+    EmailData, 
+    LetterType, 
+    Reminder,
+    VacationData,
+    VacationSubstitute,
+)
 
 __all__ = [
-    'EmailData',
+    'AbsenceData',
+    'AbsencePeriod',
+    'AbsenceSubstitute',
     'CommandTrip',
-    'Reminder',
+    'EmailData',
     'LetterType',
+    'Reminder',
+    'VacationData',
+    'VacationSubstitute',
 ]

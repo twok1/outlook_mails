@@ -1,7 +1,5 @@
-from .command_trip_processor import CommandTripProcessor
-from .reminder_calculator import ReminderCalculator
+from .mail_routes import get_routes
 
 __all__ = [
-    'CommandTripProcessor',
-    'ReminderCalculator',
+    'get_routes',
 ]
