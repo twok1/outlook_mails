@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
+from typing import List, Optional
 
 FORMAT_DATE = '%d.%m.%Y'
 
@@ -91,3 +91,33 @@ class Reminder:
     subject: str
     text: str
     reminder_id: Optional[str] = None  # Опциональное поле для хранения ID в Exchange
+    
+    
+class VacationSubstitute(BaseModel):
+    """Модель заместителя на время отпуска"""
+    person: str
+    dates: List[str]
+
+class VacationData(BaseModel):
+    """Модель информации об отпуске"""
+    email_id: str
+    main_person: str
+    main_position: str
+    main_dates: List[str]
+    substitutes: List[VacationSubstitute] = []
+    
+    
+class AbsencePeriod(BaseModel):
+    start_date: datetime
+    end_date: datetime
+
+class AbsenceSubstitute(BaseModel):
+    person: str
+    dates: List[AbsencePeriod]
+
+class AbsenceData(BaseModel):
+    email_id: str
+    main_person: str
+    main_position: str
+    main_dates: List[AbsencePeriod]
+    substitutes: List[AbsenceSubstitute] = []

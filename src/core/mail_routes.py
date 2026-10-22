@@ -1,14 +1,24 @@
 from dataclasses import dataclass
-from typing import List
 from exchangelib import Q
+from typing import List
 
 from .interfaces import BaseMailProcessor, BaseMailParser
-from src.parsers import TripEmailParser
-from src.processors import CommandTripProcessor
-from src.services import ReminderCalculator
+from src.integrations.filesystem import (
+    TripDirectoryManager, 
+    VacationStorage,
+)
 from src.integrations.outlook import ReminderManager, OutlookConnector
-from src.integrations.filesystem import TripDirectoryManager
+from src.services import ReminderCalculator
 from src.utils import Config
+from src.parsers import (
+    TripEmailParser, 
+    VacationMailParser,
+    AbsenceMailParser,
+)
+from src.processors import (
+    CommandTripProcessor,
+    VacationProcessor,
+)
 
 @dataclass
 class MailRoute:
@@ -25,6 +35,11 @@ trip_query = Q(
         )
     )
 
+vacation_query = Q(
+    Q(sender='orp@cate.ru') &
+    Q(subject__contains='Отсутствие ')
+)
+
 def get_routes(outlook_connector: OutlookConnector, settings: Config) -> List[MailRoute]:
     return [
         MailRoute(
@@ -36,4 +51,9 @@ def get_routes(outlook_connector: OutlookConnector, settings: Config) -> List[Ma
                 reminder_manager=ReminderManager(outlook=outlook_connector),
             )
         ),
+        MailRoute(
+            query=vacation_query,
+            parser=AbsenceMailParser(),
+            processor=VacationProcessor(vacation_storage=VacationStorage(settings=settings)),
+        )
     ]

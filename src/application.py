@@ -40,4 +40,4 @@ class Application:
 
             # Отмечаем письма как обработанные именно этим парсером
             self.processed_storage.mark_as_processed(new_messages, parser_name)
-                
+    
