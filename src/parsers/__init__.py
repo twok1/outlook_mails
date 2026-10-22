@@ -1,5 +1,5 @@
-from .email_parser import EmailParser
+from .trip_mail_parser import TripEmailParser
 
 __all__ = [
-    'EmailParser',
+    'TripEmailParser',
 ]

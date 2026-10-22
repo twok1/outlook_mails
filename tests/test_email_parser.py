@@ -1,14 +1,14 @@
 # tests/test_email_parser.py
 import unittest
 from datetime import datetime
-from src.parsers.email_parser import EmailParser
+from src.parsers.trip_mail_parser import TripEmailParser
 from src.models.dataclasses import EmailData, LetterType
 
 class TestEmailParser(unittest.TestCase):
     
     def setUp(self):
         """Настройка перед каждым тестом"""
-        self.parser = EmailParser()
+        self.parser = TripEmailParser()
         
         # Тестовый email для новой командировки
         self.new_command_email_body = """Уважаемый сотрудник!

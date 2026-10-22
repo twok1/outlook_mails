@@ -3,7 +3,7 @@ import logging
 from src.integrations.outlook import EmailReader, OutlookConnector, ReminderManager
 from src.integrations.filesystem import TripDirectoryManager
 from src.core import CommandTripProcessor, ReminderCalculator, get_trip_query
-from src.parsers import EmailParser
+from src.parsers import TripEmailParser
 from src.utils import settings, setup_logging
 
 
@@ -17,7 +17,7 @@ class Application:
         self.logger.info('OutlookConnector загружен')
         self.mail_reader = EmailReader(outlook=outlook)
         self.logger.info('EmailReader загружен')
-        self.mail_parser = EmailParser()
+        self.trip_mail_parser = TripEmailParser()
         self.logger.info('EmailParser загружен')
         self.command_trip_processor = CommandTripProcessor()
         self.logger.info('CommandTripProcessor загружен')
@@ -34,7 +34,7 @@ class Application:
         except Exception as e:
             self.logger.error(f'Ошибка при чтении почты', exc_info=True)
             return
-        parsed_messages = self.mail_parser.run(trip_messages)
+        parsed_messages = self.trip_mail_parser.run(trip_messages)
         processed_messages = self.command_trip_processor.run(parsed_messages)
 
         try:
