@@ -57,5 +57,5 @@ def email_parser():
 @pytest.fixture
 def command_trip_processor():
     """Фикстура для CommandTripProcessor"""
-    from src.processors.command_trip_processor import CommandTripProcessor
+    from src.processors.trip_processor import CommandTripProcessor
     return CommandTripProcessor()
