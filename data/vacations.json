@@ -1,0 +1,158 @@
+{
+    "vacations": [
+        {
+            "email_id": "AAMkADdmN2I0MTYyLTc0MDEtNDE4YS05MjhjLTBmNjc1Y2Q2OWVmMwBGAAAAAAArNjrhUuYfS6QWa/NeAAuUBwBNEN39nCnsQbgTftTYLfd3AAAATN3CAAA9rmkPn4/qT7+1k7Xtof6KAAW4mYR9AAA=",
+            "main_person": "Жаров Александр Сергеевич",
+            "main_position": "заместитель главного инженера по электротехническому оборудованию",
+            "main_dates": [
+                {
+                    "start_date": "2026-10-23T00:00:00",
+                    "end_date": "2026-11-02T00:00:00"
+                }
+            ],
+            "substitutes": [
+                {
+                    "person": "Калинин Илья Владимирович",
+                    "dates": [
+                        {
+                            "start_date": "2026-10-23T00:00:00",
+                            "end_date": "2026-11-02T00:00:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "email_id": "AAMkADdmN2I0MTYyLTc0MDEtNDE4YS05MjhjLTBmNjc1Y2Q2OWVmMwBGAAAAAAArNjrhUuYfS6QWa/NeAAuUBwBNEN39nCnsQbgTftTYLfd3AAAATN3CAAA9rmkPn4/qT7+1k7Xtof6KAAW4mYR8AAA=",
+            "main_person": "Горбанев Артем Александрович",
+            "main_position": "заместитель главного инженера по технологии",
+            "main_dates": [
+                {
+                    "start_date": "2026-10-23T00:00:00",
+                    "end_date": "2026-10-30T00:00:00"
+                }
+            ],
+            "substitutes": [
+                {
+                    "person": "Латышев Евгений Владимирович",
+                    "dates": [
+                        {
+                            "start_date": "2026-10-23T00:00:00",
+                            "end_date": "2026-10-30T00:00:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "email_id": "AAMkADdmN2I0MTYyLTc0MDEtNDE4YS05MjhjLTBmNjc1Y2Q2OWVmMwBGAAAAAAArNjrhUuYfS6QWa/NeAAuUBwBNEN39nCnsQbgTftTYLfd3AAAATN3CAAA9rmkPn4/qT7+1k7Xtof6KAAW4mYRzAAA=",
+            "main_person": "Солдатов Ярослав Борисович",
+            "main_position": "главный инженер филиала",
+            "main_dates": [
+                {
+                    "start_date": "2026-10-19T00:00:00",
+                    "end_date": "2026-11-02T00:00:00"
+                }
+            ],
+            "substitutes": [
+                {
+                    "person": "Шенцов Константин Эдуардович",
+                    "dates": [
+                        {
+                            "start_date": "2026-10-19T00:00:00",
+                            "end_date": "2026-10-20T00:00:00"
+                        },
+                        {
+                            "start_date": "2026-10-23T00:00:00",
+                            "end_date": "2026-11-02T00:00:00"
+                        }
+                    ]
+                },
+                {
+                    "person": "Михайлов Александр Александрович",
+                    "dates": [
+                        {
+                            "start_date": "2026-10-21T00:00:00",
+                            "end_date": "2026-10-22T00:00:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "email_id": "AAMkADdmN2I0MTYyLTc0MDEtNDE4YS05MjhjLTBmNjc1Y2Q2OWVmMwBGAAAAAAArNjrhUuYfS6QWa/NeAAuUBwBNEN39nCnsQbgTftTYLfd3AAAATN3CAAA9rmkPn4/qT7+1k7Xtof6KAAW4mYP0AAA=",
+            "main_person": "Балескова Марина Витальевна",
+            "main_position": "заместитель директора по экономике и финансам",
+            "main_dates": [
+                {
+                    "start_date": "2026-09-22T00:00:00",
+                    "end_date": "2026-09-24T00:00:00"
+                }
+            ],
+            "substitutes": [
+                {
+                    "person": "Овчинниковой Светлане Викторовне",
+                    "dates": [
+                        {
+                            "start_date": "2026-09-22T00:00:00",
+                            "end_date": "2026-09-24T00:00:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "email_id": "AAMkADdmN2I0MTYyLTc0MDEtNDE4YS05MjhjLTBmNjc1Y2Q2OWVmMwBGAAAAAAArNjrhUuYfS6QWa/NeAAuUBwBNEN39nCnsQbgTftTYLfd3AAAATN3CAAA9rmkPn4/qT7+1k7Xtof6KAAW4mYOqAAA=",
+            "main_person": "Михайлов Александр Александрович",
+            "main_position": "и.о. заместителя главного инженера по автоматизированным системам управления технологическими процессами",
+            "main_dates": [
+                {
+                    "start_date": "2026-09-16T00:00:00",
+                    "end_date": "2026-10-15T00:00:00"
+                }
+            ],
+            "substitutes": [
+                {
+                    "person": "Шенцов Константин Эдуардович",
+                    "dates": [
+                        {
+                            "start_date": "2026-09-16T00:00:00",
+                            "end_date": "2026-09-20T00:00:00"
+                        }
+                    ]
+                },
+                {
+                    "person": "Коватев Владислав Сергеевич",
+                    "dates": [
+                        {
+                            "start_date": "2026-09-21T00:00:00",
+                            "end_date": "2026-10-15T00:00:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "email_id": "AAMkADdmN2I0MTYyLTc0MDEtNDE4YS05MjhjLTBmNjc1Y2Q2OWVmMwBGAAAAAAArNjrhUuYfS6QWa/NeAAuUBwBNEN39nCnsQbgTftTYLfd3AAAATN3CAAA9rmkPn4/qT7+1k7Xtof6KAAW4mYOGAAA=",
+            "main_person": "Малышев Виктор Валерьевич",
+            "main_position": "заместитель генерального директора – директор филиала",
+            "main_dates": [
+                {
+                    "start_date": "2026-09-12T00:00:00",
+                    "end_date": "2026-09-28T00:00:00"
+                }
+            ],
+            "substitutes": [
+                {
+                    "person": "Солдатов Ярослав Борисович",
+                    "dates": [
+                        {
+                            "start_date": "2026-09-12T00:00:00",
+                            "end_date": "2026-09-28T00:00:00"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
