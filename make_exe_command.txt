@@ -1,1 +1,1 @@
-pyinstaller --onedir --onefile --hiddenimport=win32timezone --name=mails run.pyw
+pyinstaller --onefile --hiddenimport=win32timezone --collect-all pymorphy2_dicts_ru --collect-all natasha --collect-all slovnet --collect-all navec --collect-all yargy --name=mails run.pyw
