@@ -2,7 +2,6 @@ import os
 import sys
 from pathlib import Path
 
-import pyperclip
 import pathspec
 
 # Каталоги, которые нужно обработать (включая подкаталоги)
@@ -241,13 +240,6 @@ def main():
     output_path = root / OUTPUT_FILE
     output_path.write_text(dump, encoding='utf-8')
     print(f'\n[i] Сохранено в: {output_path}')
-
-    try:
-        pyperclip.copy(dump)
-        print('[i] Скопировано в буфер обмена.')
-    except Exception as e:
-        print(f'[!] Не удалось скопировать в буфер обмена: {e}', file=sys.stderr)
-        print('    Установите: pip install pyperclip')
 
 
 if __name__ == '__main__':
