@@ -7,7 +7,7 @@ from src.integrations.filesystem import (
     TripDirectoryManager, 
     VacationStorage,
 )
-from src.integrations.outlook import ReminderManager, OutlookConnector
+from src.integrations.outlook import ReminderManager, OutlookConnector, OutlookCalendarManager
 from src.services import ReminderCalculator
 from src.utils import Config
 from src.parsers import (
@@ -54,6 +54,9 @@ def get_routes(outlook_connector: OutlookConnector, settings: Config) -> List[Ma
         MailRoute(
             query=vacation_query,
             parser=AbsenceMailParser(),
-            processor=VacationProcessor(vacation_storage=VacationStorage(settings=settings)),
+            processor=VacationProcessor(
+                vacation_storage=VacationStorage(settings=settings),
+                calendar_manager=OutlookCalendarManager(outlook=outlook_connector)
+            ),
         )
     ]
